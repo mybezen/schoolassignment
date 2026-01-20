@@ -4,7 +4,7 @@ import { dashboard, login, register } from '@/routes';
 import { type SharedData } from '@/types';
 
 export default function Welcome({
-    canRegister = true,
+    canRegister = false,
 }: {
     canRegister?: boolean;
 }) {
