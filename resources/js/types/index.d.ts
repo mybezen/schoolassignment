@@ -40,3 +40,16 @@ export interface User {
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
 }
+
+export type PageProps<T = {}> = {
+    auth: {
+        user: User;
+    };
+    user: User;
+    flash?: {
+        success?: string;
+        error?: string;
+    };
+    success?: string;
+    error?: string;
+} & T;
