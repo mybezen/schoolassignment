@@ -1,5 +1,13 @@
 import { Link } from '@inertiajs/react';
-import { BookOpen, BoxIcon, Calendar1, Folder, LayoutGrid, NetworkIcon, PictureInPicture2Icon } from 'lucide-react';
+import { 
+    BookOpen, 
+    BoxIcon, 
+    Calendar1, 
+    ImageIcon, 
+    LayoutGrid, 
+    Mail, 
+    Users 
+} from 'lucide-react';
 
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -13,7 +21,6 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { articles, create, dashboard, events, pictures, products } from '@/routes';
 import { type NavItem } from '@/types';
 
 import AppLogo from './app-logo';
@@ -21,49 +28,42 @@ import AppLogo from './app-logo';
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
-        href: dashboard(),
+        href: '/admin/dashboard',
         icon: LayoutGrid,
     },
     {
         title: 'Products',
-        href: products(),
-        icon: BoxIcon,
-    },
-    {
-        title: 'Create Storage',
-        href: create(),
+        href: '/admin/products',
         icon: BoxIcon,
     },
     {
         title: 'Articles',
-        href: articles(),
-        icon: NetworkIcon,
+        href: '/admin/articles',
+        icon: BookOpen,
     },
     {
         title: 'Events',
-        href: events(),
+        href: '/admin/events',
         icon: Calendar1,
     },
     {
-        title: 'Pictures',
-        href: pictures(),
-        icon: PictureInPicture2Icon,
+        title: 'Gallery',
+        href: '/admin/gallery',
+        icon: ImageIcon,
+    },
+    {
+        title: 'Clients',
+        href: '/admin/clients',
+        icon: Users,
+    },
+    {
+        title: 'Contact Messages',
+        href: '/admin/contacts',
+        icon: Mail,
     },
 ];
 
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
-    },
-    
-];
+const footerNavItems: NavItem[] = [];
 
 export function AppSidebar() {
     return (
@@ -72,7 +72,7 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href={dashboard()} prefetch>
+                            <Link href={'/admin/dashboard'} prefetch>
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>
