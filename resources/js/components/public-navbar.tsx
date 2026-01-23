@@ -1,97 +1,81 @@
+// resources/js/components/public-navbar.tsx
 import { Link } from '@inertiajs/react';
 import { useState } from 'react';
+import { Menu, X, Coffee } from 'lucide-react';
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
 
     const navigation = [
         { name: 'Home', href: '/' },
-        { name: 'About Us', href: '/about' },
-        { name: 'Vision & Mission', href: '/vision-mission' },
-        { name: 'Products / Services', href: '/products' },
+        { name: 'About', href: '/about' },
+        { name: 'Products', href: '/products' },
         { name: 'Articles', href: '/articles' },
         { name: 'Events', href: '/events' },
         { name: 'Gallery', href: '/gallery' },
-        { name: 'Clients', href: '/clients' },
         { name: 'Contact', href: '/contact' },
     ];
 
     return (
-        <nav className="bg-white shadow-sm dark:bg-gray-900">
+        <nav className="sticky top-0 z-50 border-b border-[#E8DCC8] bg-gradient-to-r from-[#FFFBF5] to-[#FFF8ED] shadow-sm backdrop-blur-sm">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div className="flex h-16 justify-between">
-                    <div className="flex">
-                        <div className="flex flex-shrink-0 items-center">
-                            <Link href="/" className="text-xl font-bold text-gray-900 dark:text-white">
-                                Company
-                            </Link>
+                <div className="flex h-16 items-center justify-between">
+                    {/* Logo */}
+                    <Link href="/" className="flex items-center gap-2 group">
+                        <div className="rounded-full bg-gradient-to-br from-[#BFA888] to-[#6F5B3A] p-2 shadow-md transition-shadow group-hover:shadow-lg">
+                            <Coffee className="h-5 w-5 text-[#FFFBF5]" />
                         </div>
-                        <div className="hidden sm:ml-8 sm:flex sm:space-x-4">
+                        <span className="text-xl font-bold bg-gradient-to-r from-[#A67C52] to-[#5C4A30] bg-clip-text text-transparent">
+                            Company
+                        </span>
+                    </Link>
+
+                    {/* Desktop Navigation */}
+                    <div className="hidden md:block">
+                        <div className="flex items-center space-x-1">
                             {navigation.map((item) => (
                                 <Link
                                     key={item.name}
                                     href={item.href}
-                                    className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-700 transition-colors hover:border-gray-300 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                                    className="rounded-lg px-4 py-2 text-sm font-medium text-[#4A3926] transition-all hover:bg-[#F5EFE6] hover:text-[#6F5B3A]"
                                 >
                                     {item.name}
                                 </Link>
                             ))}
                         </div>
                     </div>
-                    <div className="hidden sm:ml-6 sm:flex sm:items-center">
-                        <Link
-                            href="/login"
-                            className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800"
-                        >
-                            Login
-                        </Link>
-                    </div>
-                    <div className="-mr-2 flex items-center sm:hidden">
-                        <button
-                            onClick={() => setIsOpen(!isOpen)}
-                            className="inline-flex items-center justify-center rounded-md p-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800"
-                        >
-                            <span className="sr-only">Open main menu</span>
-                            <svg
-                                className={`${isOpen ? 'hidden' : 'block'} h-6 w-6`}
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                            </svg>
-                            <svg
-                                className={`${isOpen ? 'block' : 'hidden'} h-6 w-6`}
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
-                    </div>
+
+                    {/* Mobile menu button */}
+                    <button
+                        onClick={() => setIsOpen(!isOpen)}
+                        className="rounded-lg p-2 text-[#5C4A30] hover:bg-[#F5EFE6] md:hidden"
+                    >
+                        {isOpen ? (
+                            <X className="h-6 w-6" />
+                        ) : (
+                            <Menu className="h-6 w-6" />
+                        )}
+                    </button>
                 </div>
             </div>
 
-            <div className={`${isOpen ? 'block' : 'hidden'} sm:hidden`}>
-                <div className="space-y-1 pb-3 pt-2">
-                    {navigation.map((item) => (
-                        <Link
-                            key={item.name}
-                            href={item.href}
-                            className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-700 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white"
-                        >
-                            {item.name}
-                        </Link>
-                    ))}
-                    <Link
-                        href="/login"
-                        className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-700 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white"
-                    >
-                        Login
-                    </Link>
+            {/* Mobile Navigation */}
+            {isOpen && (
+                <div className="border-t border-[#E8DCC8] bg-[#FFFBF5] md:hidden">
+                    <div className="space-y-1 px-4 pb-3 pt-2">
+                        {navigation.map((item) => (
+                            <Link
+                                key={item.name}
+                                href={item.href}
+                                className="block rounded-lg px-4 py-2 text-base font-medium text-[#4A3926] hover:bg-[#F5EFE6] hover:text-[#6F5B3A]"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                {item.name}
+                            </Link>
+                        ))}
+                    </div>
                 </div>
-            </div>
+            )}
         </nav>
     );
 }
