@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { DatePicker } from '@/components/ui/date-picker';
 
 export default function ArticlesCreate() {
     const { data, setData, post, processing, errors } = useForm({
@@ -35,11 +36,24 @@ export default function ArticlesCreate() {
         });
     };
 
+    // Convert string dates to Date objects for DatePicker
+    const publishDate = data.published_at ? new Date(data.published_at) : undefined;
+
+    const handlePublishDateChange = (date: Date | undefined) => {
+        if (date) {
+            // Format to ISO string without timezone offset
+            const isoString = date.toISOString().slice(0, 16);
+            setData('published_at', isoString);
+        } else {
+            setData('published_at', '');
+        }
+    };
+
     return (
         <AppLayout>
             <Head title="Create Article" />
 
-            <motion.div 
+            <motion.div
                 className="flex h-full flex-1 justify-center p-6 overflow-x-auto"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -92,7 +106,7 @@ export default function ArticlesCreate() {
                             </CardHeader>
                             <CardContent className="pt-6">
                                 <form onSubmit={submit} className="space-y-6">
-                                    <motion.div 
+                                    <motion.div
                                         className="space-y-2"
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
@@ -108,11 +122,10 @@ export default function ArticlesCreate() {
                                             onFocus={() => setFocusedField('title')}
                                             onBlur={() => setFocusedField(null)}
                                             required
-                                            className={`transition-all duration-200 ${
-                                                focusedField === 'title' 
-                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' 
+                                            className={`transition-all duration-200 ${focusedField === 'title'
+                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
                                                     : ''
-                                            }`}
+                                                }`}
                                             placeholder="Enter article title"
                                         />
                                         <AnimatePresence>
@@ -129,7 +142,7 @@ export default function ArticlesCreate() {
                                         </AnimatePresence>
                                     </motion.div>
 
-                                    <motion.div 
+                                    <motion.div
                                         className="space-y-2"
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
@@ -144,11 +157,10 @@ export default function ArticlesCreate() {
                                             onBlur={() => setFocusedField(null)}
                                             rows={2}
                                             placeholder="Short description of the article"
-                                            className={`transition-all duration-200 ${
-                                                focusedField === 'excerpt' 
-                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' 
+                                            className={`transition-all duration-200 ${focusedField === 'excerpt'
+                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
                                                     : ''
-                                            }`}
+                                                }`}
                                         />
                                         <AnimatePresence>
                                             {errors.excerpt && (
@@ -164,7 +176,7 @@ export default function ArticlesCreate() {
                                         </AnimatePresence>
                                     </motion.div>
 
-                                    <motion.div 
+                                    <motion.div
                                         className="space-y-2"
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
@@ -181,11 +193,10 @@ export default function ArticlesCreate() {
                                             onBlur={() => setFocusedField(null)}
                                             rows={10}
                                             required
-                                            className={`transition-all duration-200 ${
-                                                focusedField === 'content' 
-                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' 
+                                            className={`transition-all duration-200 ${focusedField === 'content'
+                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
                                                     : ''
-                                            }`}
+                                                }`}
                                             placeholder="Write your article content here..."
                                         />
                                         <AnimatePresence>
@@ -202,7 +213,7 @@ export default function ArticlesCreate() {
                                         </AnimatePresence>
                                     </motion.div>
 
-                                    <motion.div 
+                                    <motion.div
                                         className="space-y-2"
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
@@ -218,11 +229,10 @@ export default function ArticlesCreate() {
                                             onChange={(e) => setData('author', e.target.value)}
                                             onFocus={() => setFocusedField('author')}
                                             onBlur={() => setFocusedField(null)}
-                                            className={`transition-all duration-200 ${
-                                                focusedField === 'author' 
-                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' 
+                                            className={`transition-all duration-200 ${focusedField === 'author'
+                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
                                                     : ''
-                                            }`}
+                                                }`}
                                             placeholder="Article author name"
                                         />
                                         <AnimatePresence>
@@ -239,7 +249,7 @@ export default function ArticlesCreate() {
                                         </AnimatePresence>
                                     </motion.div>
 
-                                    <motion.div 
+                                    <motion.div
                                         className="space-y-2"
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
@@ -258,11 +268,10 @@ export default function ArticlesCreate() {
                                             }
                                             onFocus={() => setFocusedField('thumbnail')}
                                             onBlur={() => setFocusedField(null)}
-                                            className={`transition-all duration-200 cursor-pointer ${
-                                                focusedField === 'thumbnail' 
-                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' 
+                                            className={`transition-all duration-200 cursor-pointer ${focusedField === 'thumbnail'
+                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
                                                     : ''
-                                            }`}
+                                                }`}
                                         />
                                         <AnimatePresence>
                                             {errors.thumbnail && (
@@ -278,7 +287,7 @@ export default function ArticlesCreate() {
                                         </AnimatePresence>
                                     </motion.div>
 
-                                    <motion.div 
+                                    <motion.div
                                         className="space-y-2"
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
@@ -288,18 +297,17 @@ export default function ArticlesCreate() {
                                             <Calendar className="h-4 w-4" />
                                             Published Date
                                         </Label>
-                                        <Input
+                                        <DatePicker
                                             id="published_at"
-                                            type="datetime-local"
-                                            value={data.published_at}
-                                            onChange={(e) => setData('published_at', e.target.value)}
+                                            date={publishDate}
+                                            setDate={handlePublishDateChange}
                                             onFocus={() => setFocusedField('published_at')}
                                             onBlur={() => setFocusedField(null)}
-                                            className={`transition-all duration-200 ${
-                                                focusedField === 'published_at' 
-                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' 
-                                                    : ''
-                                            }`}
+                                            required
+                                            className={focusedField === 'published_at'
+                                                ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
+                                                : ''
+                                            }
                                         />
                                         <AnimatePresence>
                                             {errors.published_at && (
@@ -315,7 +323,7 @@ export default function ArticlesCreate() {
                                         </AnimatePresence>
                                     </motion.div>
 
-                                    <motion.div 
+                                    <motion.div
                                         className="flex items-center space-x-3 p-4 rounded-lg bg-muted/30 border border-border/50"
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
@@ -332,7 +340,7 @@ export default function ArticlesCreate() {
                                         </Label>
                                     </motion.div>
 
-                                    <motion.div 
+                                    <motion.div
                                         className="flex gap-3 pt-4"
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
@@ -343,8 +351,8 @@ export default function ArticlesCreate() {
                                             whileTap={{ scale: 0.98 }}
                                             className="flex-1"
                                         >
-                                            <Button 
-                                                type="submit" 
+                                            <Button
+                                                type="submit"
                                                 disabled={processing}
                                                 className="w-full shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all duration-300"
                                             >

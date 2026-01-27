@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { DatePicker } from '@/components/ui/date-picker';
 
 interface Event {
     id: number;
@@ -55,11 +56,36 @@ export default function EventsEdit({ event }: EventsEditProps) {
         });
     };
 
+    // Convert string dates to Date objects for DatePicker
+    const startDate = data.start_date ? new Date(data.start_date) : undefined;
+    const endDate = data.end_date ? new Date(data.end_date) : undefined;
+
+    const handleStartDateChange = (date: Date | undefined) => {
+        if (date) {
+            // Format to ISO string without timezone offset
+            const isoString = date.toISOString().slice(0, 16);
+            setData('start_date', isoString);
+        } else {
+            setData('start_date', '');
+        }
+    };
+
+    const handleEndDateChange = (date: Date | undefined) => {
+        if (date) {
+            // Format to ISO string without timezone offset
+            const isoString = date.toISOString().slice(0, 16);
+            setData('end_date', isoString);
+        } else {
+            setData('end_date', '');
+        }
+    };
+
+
     return (
         <AppLayout>
             <Head title="Edit Event" />
 
-            <motion.div 
+            <motion.div
                 className="flex h-full flex-1 justify-center p-6 overflow-x-auto"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -112,7 +138,7 @@ export default function EventsEdit({ event }: EventsEditProps) {
                             </CardHeader>
                             <CardContent className="pt-6">
                                 <form onSubmit={submit} className="space-y-6">
-                                    <motion.div 
+                                    <motion.div
                                         className="space-y-2"
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
@@ -128,11 +154,10 @@ export default function EventsEdit({ event }: EventsEditProps) {
                                             onFocus={() => setFocusedField('title')}
                                             onBlur={() => setFocusedField(null)}
                                             required
-                                            className={`transition-all duration-200 ${
-                                                focusedField === 'title' 
-                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' 
-                                                    : ''
-                                            }`}
+                                            className={`transition-all duration-200 ${focusedField === 'title'
+                                                ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
+                                                : ''
+                                                }`}
                                         />
                                         <AnimatePresence>
                                             {errors.title && (
@@ -148,7 +173,7 @@ export default function EventsEdit({ event }: EventsEditProps) {
                                         </AnimatePresence>
                                     </motion.div>
 
-                                    <motion.div 
+                                    <motion.div
                                         className="space-y-2"
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
@@ -163,11 +188,10 @@ export default function EventsEdit({ event }: EventsEditProps) {
                                             onBlur={() => setFocusedField(null)}
                                             rows={2}
                                             placeholder="Brief event summary"
-                                            className={`transition-all duration-200 ${
-                                                focusedField === 'description' 
-                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' 
-                                                    : ''
-                                            }`}
+                                            className={`transition-all duration-200 ${focusedField === 'description'
+                                                ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
+                                                : ''
+                                                }`}
                                         />
                                         <AnimatePresence>
                                             {errors.description && (
@@ -183,7 +207,7 @@ export default function EventsEdit({ event }: EventsEditProps) {
                                         </AnimatePresence>
                                     </motion.div>
 
-                                    <motion.div 
+                                    <motion.div
                                         className="space-y-2"
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
@@ -197,11 +221,10 @@ export default function EventsEdit({ event }: EventsEditProps) {
                                             onFocus={() => setFocusedField('content')}
                                             onBlur={() => setFocusedField(null)}
                                             rows={5}
-                                            className={`transition-all duration-200 ${
-                                                focusedField === 'content' 
-                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' 
-                                                    : ''
-                                            }`}
+                                            className={`transition-all duration-200 ${focusedField === 'content'
+                                                ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
+                                                : ''
+                                                }`}
                                         />
                                         <AnimatePresence>
                                             {errors.content && (
@@ -217,7 +240,7 @@ export default function EventsEdit({ event }: EventsEditProps) {
                                         </AnimatePresence>
                                     </motion.div>
 
-                                    <motion.div 
+                                    <motion.div
                                         className="space-y-2"
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
@@ -234,11 +257,10 @@ export default function EventsEdit({ event }: EventsEditProps) {
                                             onFocus={() => setFocusedField('location')}
                                             onBlur={() => setFocusedField(null)}
                                             placeholder="Event venue"
-                                            className={`transition-all duration-200 ${
-                                                focusedField === 'location' 
-                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' 
-                                                    : ''
-                                            }`}
+                                            className={`transition-all duration-200 ${focusedField === 'location'
+                                                ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
+                                                : ''
+                                                }`}
                                         />
                                         <AnimatePresence>
                                             {errors.location && (
@@ -254,7 +276,7 @@ export default function EventsEdit({ event }: EventsEditProps) {
                                         </AnimatePresence>
                                     </motion.div>
 
-                                    <motion.div 
+                                    <motion.div
                                         className="space-y-2"
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
@@ -265,7 +287,7 @@ export default function EventsEdit({ event }: EventsEditProps) {
                                             Image
                                         </Label>
                                         {event.image && (
-                                            <motion.div 
+                                            <motion.div
                                                 className="mb-3"
                                                 initial={{ opacity: 0, scale: 0.95 }}
                                                 animate={{ opacity: 1, scale: 1 }}
@@ -289,11 +311,10 @@ export default function EventsEdit({ event }: EventsEditProps) {
                                             }
                                             onFocus={() => setFocusedField('image')}
                                             onBlur={() => setFocusedField(null)}
-                                            className={`transition-all duration-200 cursor-pointer ${
-                                                focusedField === 'image' 
-                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' 
-                                                    : ''
-                                            }`}
+                                            className={`transition-all duration-200 cursor-pointer ${focusedField === 'image'
+                                                ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
+                                                : ''
+                                                }`}
                                         />
                                         <AnimatePresence>
                                             {errors.image && (
@@ -309,7 +330,7 @@ export default function EventsEdit({ event }: EventsEditProps) {
                                         </AnimatePresence>
                                     </motion.div>
 
-                                    <motion.div 
+                                    <motion.div
                                         className="grid gap-6 md:grid-cols-2"
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
@@ -320,19 +341,17 @@ export default function EventsEdit({ event }: EventsEditProps) {
                                                 <Clock className="h-4 w-4" />
                                                 Start Date <span className="text-destructive">*</span>
                                             </Label>
-                                            <Input
+                                            <DatePicker
                                                 id="start_date"
-                                                type="datetime-local"
-                                                value={data.start_date}
-                                                onChange={(e) => setData('start_date', e.target.value)}
+                                                date={startDate}
+                                                setDate={handleStartDateChange}
                                                 onFocus={() => setFocusedField('start_date')}
                                                 onBlur={() => setFocusedField(null)}
                                                 required
-                                                className={`transition-all duration-200 ${
-                                                    focusedField === 'start_date' 
-                                                        ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' 
-                                                        : ''
-                                                }`}
+                                                className={focusedField === 'start_date'
+                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
+                                                    : ''
+                                                }
                                             />
                                             <AnimatePresence>
                                                 {errors.start_date && (
@@ -353,18 +372,16 @@ export default function EventsEdit({ event }: EventsEditProps) {
                                                 <Clock className="h-4 w-4" />
                                                 End Date
                                             </Label>
-                                            <Input
+                                            <DatePicker
                                                 id="end_date"
-                                                type="datetime-local"
-                                                value={data.end_date}
-                                                onChange={(e) => setData('end_date', e.target.value)}
+                                                date={endDate}
+                                                setDate={handleEndDateChange}
                                                 onFocus={() => setFocusedField('end_date')}
                                                 onBlur={() => setFocusedField(null)}
-                                                className={`transition-all duration-200 ${
-                                                    focusedField === 'end_date' 
-                                                        ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' 
-                                                        : ''
-                                                }`}
+                                                className={`transition-all duration-200 w-full ${focusedField === 'end_date'
+                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
+                                                    : ''
+                                                    }`}
                                             />
                                             <AnimatePresence>
                                                 {errors.end_date && (
@@ -381,7 +398,7 @@ export default function EventsEdit({ event }: EventsEditProps) {
                                         </div>
                                     </motion.div>
 
-                                    <motion.div 
+                                    <motion.div
                                         className="flex items-center space-x-3 p-4 rounded-lg bg-muted/30 border border-border/50"
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
@@ -398,7 +415,7 @@ export default function EventsEdit({ event }: EventsEditProps) {
                                         </Label>
                                     </motion.div>
 
-                                    <motion.div 
+                                    <motion.div
                                         className="flex gap-3 pt-4"
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
@@ -409,8 +426,8 @@ export default function EventsEdit({ event }: EventsEditProps) {
                                             whileTap={{ scale: 0.98 }}
                                             className="flex-1"
                                         >
-                                            <Button 
-                                                type="submit" 
+                                            <Button
+                                                type="submit"
                                                 disabled={processing}
                                                 className="w-full shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all duration-300"
                                             >

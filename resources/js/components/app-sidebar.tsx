@@ -1,18 +1,17 @@
 import { Link } from '@inertiajs/react';
-import { 
-    BookOpen, 
+import {  
     BoxIcon, 
     Calendar1, 
     ImageIcon, 
     LayoutGrid, 
     Mail, 
+    Paperclip, 
     Users 
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 
-import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import {
@@ -42,7 +41,7 @@ const mainNavItems: NavItem[] = [
     {
         title: 'Articles',
         href: '/admin/articles',
-        icon: BookOpen,
+        icon: Paperclip,
     },
     {
         title: 'Events',
