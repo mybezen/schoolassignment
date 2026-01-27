@@ -28,6 +28,7 @@ Route::post('/register', fn () => abort(404));
 // Public routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', [AboutController::class, 'index'])->name('about');
+Route::get('/vision-mission', fn () => Inertia::render('vission-mission'))->name('vision-mission');
 
 // Products
 Route::get('/products', [PublicProductController::class, 'index'])->name('products.index');
