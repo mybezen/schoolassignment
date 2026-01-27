@@ -254,7 +254,7 @@ export default function Home({ featuredProducts, latestArticles, upcomingEvents,
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 1, duration: 0.8 }}
-                    className="absolute bottom-12 left-1/2 -translate-x-1/2"
+                    className="absolute -bottom-12 left-1/2 -translate-x-1/2"
                 >
                     <div className="flex flex-col items-center gap-2">
                         <span className="text-xs text-zinc-500">Scroll to explore</span>

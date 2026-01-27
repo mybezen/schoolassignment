@@ -34,7 +34,7 @@ const containerVariants: Variants = {
     },
 };
 
-const itemVariants: Variants = {
+const itemVariants: Variants     = {
     hidden: { opacity: 0, scale: 0.9, filter: 'blur(10px)' },
     visible: {
         opacity: 1,

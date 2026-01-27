@@ -11,7 +11,7 @@
     --font-sans:
         'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-        'Noto Color Emoji';
+        'Noto Color Emoji','Poppins';
 
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);
@@ -73,7 +73,8 @@
     --popover-foreground: oklch(0.2 0.01 260);
 
     /* Brand */
-    --primary: oklch(0.58 0.14 265); /* Linear-like blue */
+    --primary: oklch(0.58 0.14 265);
+    /* Linear-like blue */
     --primary-foreground: oklch(0.98 0 0);
 
     --secondary: oklch(0.95 0.01 260);
@@ -117,46 +118,51 @@
 
 
 .dark {
-    /* Base */
-    --background: oklch(0.13 0.01 260);
-    --foreground: oklch(0.97 0.005 260);
+    /* Base colors - Deep, rich blacks with subtle purple tint */
+    --color-background: oklch(0.12 0.012 260);
+    --color-foreground: oklch(0.98 0.003 260);
 
-    --card: oklch(0.17 0.015 260);
-    --card-foreground: oklch(0.97 0.005 260);
+    /* Card colors - Slightly elevated from background */
+    --color-card: oklch(0.16 0.015 260);
+    --color-card-foreground: oklch(0.98 0.003 260);
 
-    --popover: oklch(0.17 0.015 260);
-    --popover-foreground: oklch(0.97 0.005 260);
+    /* Popover colors */
+    --color-popover: oklch(0.16 0.015 260);
+    --color-popover-foreground: oklch(0.98 0.003 260);
 
-    /* Brand */
-    --primary: oklch(0.72 0.12 265); /* Linear glow */
-    --primary-foreground: oklch(0.15 0.01 260);
+    /* Primary - Vibrant purple with glow-ready saturation */
+    --color-primary: oklch(0.68 0.15 265);
+    --color-primary-foreground: oklch(0.12 0.012 260);
 
-    --secondary: oklch(0.23 0.01 260);
-    --secondary-foreground: oklch(0.97 0.005 260);
+    /* Secondary - Subtle elevated surface */
+    --color-secondary: oklch(0.22 0.012 260);
+    --color-secondary-foreground: oklch(0.98 0.003 260);
 
-    --muted: oklch(0.23 0.01 260);
-    --muted-foreground: oklch(0.7 0.01 260);
+    /* Muted - Mid-tone for subtle elements */
+    --color-muted: oklch(0.22 0.012 260);
+    --color-muted-foreground: oklch(0.65 0.015 260);
 
-    --accent: oklch(0.6 0.14 265);
-    --accent-foreground: oklch(0.97 0.005 260);
+    /* Accent - Slightly brighter than muted */
+    --color-accent: oklch(0.58 0.16 265);
+    --color-accent-foreground: oklch(0.98 0.003 260);
 
-    /* Status */
-    --destructive: oklch(0.48 0.2 25);
-    --destructive-foreground: oklch(0.98 0 0);
+    /* Destructive - Vibrant red for warnings */
+    --color-destructive: oklch(0.55 0.22 25);
+    --color-destructive-foreground: oklch(0.98 0 0);
 
-    /* UI */
-    --border: oklch(0.28 0.01 260);
-    --input: oklch(0.28 0.01 260);
-    --ring: oklch(0.72 0.12 265);
+    /* UI Elements - Subtle borders with glow potential */
+    --color-border: oklch(0.26 0.015 260);
+    --color-input: oklch(0.26 0.015 260);
+    --color-ring: oklch(0.68 0.15 265);
 
-    /* Charts */
-    --chart-1: oklch(0.72 0.12 265);
-    --chart-2: oklch(0.7 0.12 220);
-    --chart-3: oklch(0.75 0.14 180);
-    --chart-4: oklch(0.68 0.16 300);
-    --chart-5: oklch(0.7 0.16 340);
+    /* Charts - Vibrant but harmonious palette */
+    --color-chart-1: oklch(0.68 0.15 265);
+    --color-chart-2: oklch(0.65 0.16 220);
+    --color-chart-3: oklch(0.7 0.18 180);
+    --color-chart-4: oklch(0.62 0.2 300);
+    --color-chart-5: oklch(0.65 0.2 340);
 
-    /* Sidebar */
+    /* Sidebar - Slightly darker than main background */
     --sidebar: oklch(0.16 0.01 260);
     --sidebar-foreground: oklch(0.97 0.005 260);
     --sidebar-primary: oklch(0.72 0.12 265);
@@ -165,6 +171,71 @@
     --sidebar-accent-foreground: oklch(0.97 0.005 260);
     --sidebar-border: oklch(0.28 0.01 260);
     --sidebar-ring: oklch(0.72 0.12 265);
+}
+
+/* Custom scrollbar for dark theme */
+.dark ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.dark ::-webkit-scrollbar-track {
+    background: oklch(0.16 0.015 260);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+    background: oklch(0.26 0.015 260);
+    border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.32 0.02 260);
+}
+
+/* Selection colors */
+.dark ::selection {
+    background: oklch(0.68 0.15 265 / 0.3);
+    color: oklch(0.98 0.003 260);
+}
+
+/* Focus visible ring */
+.dark *:focus-visible {
+    outline: 2px solid oklch(0.68 0.15 265 / 0.5);
+    outline-offset: 2px;
+}
+
+/* Glass morphism support */
+.backdrop-blur-sm {
+    backdrop-filter: blur(12px);
+}
+
+/* Glow effects for interactive elements */
+@keyframes glow-pulse {
+
+    0%,
+    100% {
+        box-shadow: 0 0 20px oklch(0.68 0.15 265 / 0.15);
+    }
+
+    50% {
+        box-shadow: 0 0 30px oklch(0.68 0.15 265 / 0.25);
+    }
+}
+
+.animate-glow {
+    animation: glow-pulse 2s ease-in-out infinite;
+}
+
+/* Smooth transitions for theme switching */
+* {
+    transition-property: color, background-color, border-color;
+    transition-duration: 200ms;
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Disable transitions during theme switch */
+.theme-switching * {
+    transition: none !important;
 }
 
 
