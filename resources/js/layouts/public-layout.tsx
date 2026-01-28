@@ -2,6 +2,7 @@ import { PropsWithChildren } from 'react';
 import Navbar from '@/components/public-navbar';
 import { Link } from '@inertiajs/react';
 import { motion } from 'motion/react';
+import AiChatbot from '@/components/ai-chatbot';
 
 export default function PublicLayout({ children }: PropsWithChildren) {
     return (
@@ -101,6 +102,8 @@ export default function PublicLayout({ children }: PropsWithChildren) {
                     </motion.div>
                 </div>
             </footer>
+
+            <AiChatbot />
         </div>
     );
 }
