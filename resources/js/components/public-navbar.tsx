@@ -42,7 +42,7 @@ export default function Navbar() {
                     <Link href="/" className="group flex items-center gap-3">
                         <div className="relative">
                             <div className="absolute inset-0 rounded-lg bg-violet-500/20 blur-xl opacity-0 transition-opacity group-hover:opacity-100" />
-                            <div className="relative flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 shadow-lg shadow-violet-500/25">
+                            <div className="relative flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 shadow-lg shadow-violet-500/25 transition-transform group-hover:scale-110">
                                 <Code2 className="h-5 w-5 text-white" strokeWidth={2.5} />
                             </div>
                         </div>
@@ -62,17 +62,22 @@ export default function Navbar() {
                             <Link
                                 key={item.name}
                                 href={item.href}
-                                className="relative px-3 py-2 text-sm font-medium text-zinc-400 transition hover:text-white"
+                                className="group relative px-4 py-2.5 text-sm font-medium text-zinc-300 transition-all duration-300 hover:text-white hover:scale-105 active:scale-95"
                             >
                                 {item.name}
-                                <span className="absolute inset-x-0 -bottom-px h-px scale-x-0 bg-gradient-to-r from-violet-500 to-purple-500 transition-transform group-hover:scale-x-100" />
+
+                                {/* Underline grow from center */}
+                                <span className="absolute left-1/2 bottom-1.5 h-[2px] w-0 bg-gradient-to-r from-violet-400 via-violet-500 to-purple-500 transition-all duration-400 ease-out group-hover:w-full group-hover:left-0 group-hover:right-0 rounded-full" />
+
+                                {/* Subtle glow effect */}
+                                <span className="absolute inset-0 rounded-lg bg-violet-500/0 group-hover:bg-violet-500/10 transition-all duration-300 blur-md opacity-0 group-hover:opacity-70" />
                             </Link>
                         ))}
 
-                        {/* Login */}
+                        {/* Login Button - dengan efek fancy */}
                         <Link
                             href="/login"
-                            className="ml-4 rounded-lg border border-white/10 bg-white/5 px-5 py-2 text-sm font-medium text-white backdrop-blur-xl transition hover:border-white/20 hover:bg-white/10"
+                            className="ml-4 rounded-lg border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-medium text-white backdrop-blur-xl transition-all duration-300 hover:border-violet-500/40 hover:bg-violet-500/10 hover:shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:scale-105 active:scale-95"
                         >
                             Login
                         </Link>
@@ -81,7 +86,7 @@ export default function Navbar() {
                     {/* Mobile Toggle */}
                     <button
                         onClick={() => setIsOpen(!isOpen)}
-                        className="md:hidden rounded-lg p-2 text-zinc-400 hover:text-white"
+                        className="md:hidden rounded-lg p-2 text-zinc-400 hover:text-white transition-transform active:scale-90"
                     >
                         {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
                     </button>
@@ -95,7 +100,7 @@ export default function Navbar() {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="md:hidden border-t border-white/5 bg-black/80 backdrop-blur-2xl"
+                        className="md:hidden border-t border-white/5 bg-black/80 backdrop-blur-2xl overflow-hidden"
                     >
                         <div className="space-y-1 px-6 py-4">
                             {navigation.map((item, index) => (
@@ -107,17 +112,21 @@ export default function Navbar() {
                                 >
                                     <Link
                                         href={item.href}
-                                        className="block rounded-lg px-4 py-3 text-sm font-medium text-zinc-300 hover:bg-white/5 hover:text-white"
+                                        className="group block rounded-lg px-4 py-3 text-sm font-medium text-zinc-300 transition-all duration-300 hover:bg-white/5 hover:text-white hover:pl-6 active:scale-98"
                                         onClick={() => setIsOpen(false)}
                                     >
-                                        {item.name}
+                                        <span className="relative inline-block">
+                                            {item.name}
+                                            {/* Mobile underline */}
+                                            <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-gradient-to-r from-violet-400 to-purple-500 transition-all duration-300 group-hover:w-full rounded-full" />
+                                        </span>
                                     </Link>
                                 </motion.div>
                             ))}
 
                             <Link
                                 href="/login"
-                                className="mt-2 block rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-center text-sm font-medium text-white"
+                                className="mt-4 block rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-center text-sm font-medium text-white transition-all duration-300 hover:border-violet-500/40 hover:bg-violet-500/10 hover:shadow-[0_0_15px_rgba(139,92,246,0.25)] active:scale-98"
                                 onClick={() => setIsOpen(false)}
                             >
                                 Login

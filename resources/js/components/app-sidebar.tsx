@@ -1,5 +1,5 @@
-import { Link } from '@inertiajs/react';
-import {  
+import { Link, usePage } from '@inertiajs/react';
+import { 
     BoxIcon, 
     Calendar1, 
     ImageIcon, 
@@ -8,11 +8,9 @@ import {
     Paperclip, 
     Users 
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-
-import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import {
     Sidebar,
@@ -26,257 +24,177 @@ import {
 } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 
-
 const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: '/admin/dashboard',
-        icon: LayoutGrid,
-    },
-    {
-        title: 'Products',
-        href: '/admin/products',
-        icon: BoxIcon,
-    },
-    {
-        title: 'Articles',
-        href: '/admin/articles',
-        icon: Paperclip,
-    },
-    {
-        title: 'Events',
-        href: '/admin/events',
-        icon: Calendar1,
-    },
-    {
-        title: 'Gallery',
-        href: '/admin/gallery',
-        icon: ImageIcon,
-    },
-    {
-        title: 'Clients',
-        href: '/admin/clients',
-        icon: Users,
-    },
-    {
-        title: 'Contact Messages',
-        href: '/admin/contacts',
-        icon: Mail,
-    },
+    { title: 'Dashboard', href: '/admin/dashboard', icon: LayoutGrid },
+    { title: 'Products', href: '/admin/products', icon: BoxIcon },
+    { title: 'Articles', href: '/admin/articles', icon: Paperclip },
+    { title: 'Events', href: '/admin/events', icon: Calendar1 },
+    { title: 'Gallery', href: '/admin/gallery', icon: ImageIcon },
+    { title: 'Clients', href: '/admin/clients', icon: Users },
+    { title: 'Contact Messages', href: '/admin/contacts', icon: Mail },
 ];
 
-const footerNavItems: NavItem[] = [];
-
 export function AppSidebar() {
-    const { state, open } = useSidebar();
+    const { state } = useSidebar();
     const isCollapsed = state === 'collapsed';
     const sidebarRef = useRef<HTMLDivElement>(null);
-    const contentRef = useRef<HTMLDivElement>(null);
     const headerRef = useRef<HTMLDivElement>(null);
-    const footerRef = useRef<HTMLDivElement>(null);
 
-    // GSAP entrance animation on mount
+    const { url } = usePage();
+
     useEffect(() => {
         if (!sidebarRef.current) return;
 
         const ctx = gsap.context(() => {
-            // Sidebar entrance
             gsap.fromTo(
                 sidebarRef.current,
-                { 
-                    x: -100, 
-                    opacity: 0,
-                },
-                { 
-                    x: 0, 
-                    opacity: 1,
-                    duration: 0.8,
-                    ease: 'power3.out',
-                }
+                { x: -80, opacity: 0 },
+                { x: 0, opacity: 1, duration: 0.9, ease: 'power4.out' }
             );
 
-            // Header glow pulse
             gsap.to(headerRef.current, {
-                boxShadow: '0 0 20px rgba(var(--primary), 0.3)',
-                duration: 2,
+                backgroundPosition: '200% 0%',
+                duration: 7,
                 repeat: -1,
-                yoyo: true,
-                ease: 'sine.inOut',
+                ease: 'linear',
             });
-        }, sidebarRef);
+        });
 
         return () => ctx.revert();
     }, []);
 
-    // GSAP animation for expand/collapse with elastic effect
-    useEffect(() => {
-        if (!contentRef.current) return;
-
-        const ctx = gsap.context(() => {
-            if (isCollapsed) {
-                gsap.to(contentRef.current, {
-                    scale: 0.95,
-                    opacity: 0.7,
-                    duration: 0.4,
-                    ease: 'back.in(2)',
-                });
-            } else {
-                gsap.to(contentRef.current, {
-                    scale: 1,
-                    opacity: 1,
-                    duration: 0.6,
-                    ease: 'elastic.out(1, 0.6)',
-                });
-            }
-        }, sidebarRef);
-
-        return () => ctx.revert();
-    }, [isCollapsed]);
+    const itemVariants: Variants = {
+        hidden: { opacity: 0, x: -20 },
+        visible: (i: number) => ({
+            opacity: 1,
+            x: 0,
+            transition: {
+                delay: i * 0.06,
+                duration: 0.5,
+                ease: [0.16, 1, 0.3, 1],
+            },
+        }),
+    };
 
     return (
-        <Sidebar collapsible="icon" variant="inset" ref={sidebarRef}>
+        <Sidebar collapsible="icon" variant="inset" ref={sidebarRef} className="border-r border-white/5">
             <SidebarHeader 
                 ref={headerRef}
-                className="border-b border-sidebar-border/50 relative overflow-hidden"
+                className="relative border-b border-white/5 bg-gradient-to-r from-indigo-950/40 via-slate-900/50 to-cyan-950/30 bg-[length:200%_100%]"
             >
-                <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5"
-                    animate={{
-                        x: ['-100%', '100%'],
-                    }}
-                    transition={{
-                        duration: 3,
-                        repeat: Infinity,
-                        ease: 'linear',
-                    }}
-                />
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton size="lg" asChild className="group relative z-10">
-                            <Link href={'/admin/dashboard'} prefetch>
-                                <motion.div
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    className="flex items-center gap-2"
-                                >
-                                    <motion.img 
-                                        src="/logo.svg" 
-                                        alt="Logo" 
-                                        className="h-8 w-8"
-                                        whileHover={{ 
-                                            rotate: [0, -10, 10, -10, 0],
-                                            transition: { duration: 0.5 }
-                                        }}
-                                    />
+                        <SidebarMenuButton size="lg" asChild className="group relative overflow-hidden">
+                            <Link href="/admin/dashboard">
+                                <div className="flex items-center gap-3">
+                                    <motion.div
+                                        whileHover={{ scale: 1.15, rotate: 8 }}
+                                        whileTap={{ scale: 0.92 }}
+                                        transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                                        className="relative"
+                                    >
+                                        <div className="absolute inset-0 rounded-full bg-cyan-500/20 blur-xl opacity-0 group-hover:opacity-70 transition-opacity" />
+                                        <img 
+                                            src="/logo.svg" 
+                                            alt="Logo" 
+                                            className="h-9 w-9 relative z-10"
+                                        />
+                                    </motion.div>
+
                                     <AnimatePresence mode="wait">
                                         {!isCollapsed && (
-                                            <motion.h1
-                                                key="title"
-                                                initial={{ opacity: 0, x: -10 }}
+                                            <motion.span
+                                                initial={{ opacity: 0, x: -12 }}
                                                 animate={{ opacity: 1, x: 0 }}
-                                                exit={{ opacity: 0, x: -10 }}
-                                                transition={{ duration: 0.3 }}
-                                                className="text-lg font-semibold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent"
+                                                exit={{ opacity: 0, x: -12 }}
+                                                className="text-lg font-bold bg-gradient-to-r from-cyan-200 to-blue-300 bg-clip-text text-transparent"
                                             >
                                                 Admin Panel
-                                            </motion.h1>
+                                            </motion.span>
                                         )}
                                     </AnimatePresence>
-                                </motion.div>
+                                </div>
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarHeader>
 
-            <SidebarContent ref={contentRef} className="py-2 relative">
+            <SidebarContent className="px-2 py-4">
                 <motion.div
-                    className="absolute inset-0 pointer-events-none"
-                    style={{
-                        background: 'radial-gradient(circle at 50% 0%, rgba(var(--primary), 0.05), transparent 70%)',
+                    initial="hidden"
+                    animate="visible"
+                    variants={{
+                        hidden: {},
+                        visible: { transition: { staggerChildren: 0.07 } },
                     }}
-                    animate={{
-                        opacity: [0.3, 0.6, 0.3],
-                    }}
-                    transition={{
-                        duration: 4,
-                        repeat: Infinity,
-                        ease: [0.4, 0.0, 0.2, 1],
-                    }}
-                />
-                <AnimatePresence mode="wait">
-                    {!isCollapsed ? (
-                        <motion.div
-                            key="expanded"
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: -20 }}
-                            transition={{ 
-                                duration: 0.4, 
-                                ease: [0.16, 1, 0.3, 1],
-                                staggerChildren: 0.05,
-                            }}
-                        >
-                            <NavMain items={mainNavItems} />
-                        </motion.div>
-                    ) : (
-                        <motion.div
-                            key="collapsed"
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.8 }}
-                            transition={{ duration: 0.3 }}
-                        >
-                            <NavMain items={mainNavItems} />
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+                >
+                    {mainNavItems.map((item, index) => {
+                        const isActive = typeof item.href === 'string' && url.startsWith(item.href);
+                        const Icon = item.icon;
+
+                        return (
+                            <motion.div key={item.title} custom={index} variants={itemVariants}>
+                                <SidebarMenuButton
+                                    asChild
+                                    isActive={isActive}
+                                    tooltip={isCollapsed ? item.title : undefined}
+                                    className={`group relative my-1 rounded-xl transition-all duration-300 ${
+                                        isActive 
+                                            ? 'bg-gradient-to-r from-cyan-600/20 to-blue-700/20 border border-cyan-500/30 shadow-[0_0_15px_rgba(34,211,238,0.15)]'
+                                            : 'hover:bg-white/5 hover:shadow-sm'
+                                    }`}
+                                >
+                                    <Link href={item.href}>
+                                        <div className="flex items-center gap-3">
+                                            <motion.div
+                                                whileHover={{ scale: 1.2, rotate: isActive ? 0 : [0, -6, 6, -6, 0] }}
+                                                transition={{ duration: 0.4 }}
+                                                className="relative"
+                                            >
+                                                {Icon && <Icon className={`h-5 w-5 ${isActive ? 'text-cyan-400' : 'text-zinc-400 group-hover:text-cyan-400'}`} />}
+                                                {isActive && (
+                                                    <motion.div
+                                                        className="absolute inset-0 rounded-full bg-cyan-500/20 blur-md"
+                                                        animate={{ scale: [1, 1.35, 1] }}
+                                                        transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+                                                    />
+                                                )}
+                                            </motion.div>
+
+                                            <AnimatePresence mode="wait">
+                                                {!isCollapsed && (
+                                                    <motion.span
+                                                        initial={{ opacity: 0, x: -8 }}
+                                                        animate={{ opacity: 1, x: 0 }}
+                                                        exit={{ opacity: 0, x: -8 }}
+                                                        className={`text-sm font-medium ${
+                                                            isActive ? 'text-white' : 'text-zinc-300 group-hover:text-white'
+                                                        }`}
+                                                    >
+                                                        {item.title}
+                                                    </motion.span>
+                                                )}
+                                            </AnimatePresence>
+                                        </div>
+
+                                        {isActive && !isCollapsed && (
+                                            <motion.div
+                                                layoutId="active-pill"
+                                                className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-cyan-500 to-blue-600 rounded-r-full"
+                                                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                                            />
+                                        )}
+                                    </Link>
+                                </SidebarMenuButton>
+                            </motion.div>
+                        );
+                    })}
+                </motion.div>
             </SidebarContent>
 
-            <SidebarFooter 
-                ref={footerRef}
-                className="border-t border-sidebar-border/50 relative overflow-hidden"
-            >
-                <motion.div
-                    className="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent"
-                    animate={{
-                        opacity: [0.5, 1, 0.5],
-                    }}
-                    transition={{
-                        duration: 3,
-                        repeat: Infinity,
-                        ease: [0.4, 0.0, 0.2, 1],
-                    }}
-                />
-                <AnimatePresence mode="wait">
-                    {!isCollapsed ? (
-                        <motion.div
-                            key="footer-expanded"
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 10 }}
-                            transition={{ 
-                                duration: 0.4, 
-                                ease: [0.16, 1, 0.3, 1],
-                                delay: 0.1,
-                            }}
-                            className="relative z-10"
-                        >
-                            <NavUser />
-                        </motion.div>
-                    ) : (
-                        <motion.div
-                            key="footer-collapsed"
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.8 }}
-                            transition={{ duration: 0.3 }}
-                            className="relative z-10"
-                        >
-                            <NavUser />
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+            <SidebarFooter className="border-t border-white/5 p-4">
+                <NavUser />
             </SidebarFooter>
         </Sidebar>
     );

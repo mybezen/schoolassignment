@@ -1,5 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
-import { ArrowLeft, Mail, Phone, Calendar } from 'lucide-react';
+import { ArrowLeft, Mail, Phone, Calendar, MailPlus } from 'lucide-react';
 import { format } from 'date-fns';
 import { motion } from 'motion/react';
 
@@ -189,9 +189,21 @@ export default function ContactsShow({ message }: ContactsShowProps) {
                                             asChild
                                             className="hover:bg-accent/50 transition-all duration-200"
                                         >
-                                            <a href={`mailto:${message.email}`}>
+                                            <a href={`mailto:${message.email}`} target='_blank'>
                                                 <Mail className="mr-2 h-4 w-4" />
                                                 Reply via Email
+                                            </a>
+                                        </Button>
+                                    </motion.div>
+                                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                                        <Button 
+                                            variant="outline" 
+                                            asChild
+                                            className="hover:bg-accent/50 transition-all duration-200"
+                                        >
+                                            <a href={`https://mail.google.com/mail/?view=cm&to=${message.email}`} target='_blank'>
+                                                <MailPlus className="mr-2 h-4 w-4" />
+                                                Reply via Gmail
                                             </a>
                                         </Button>
                                     </motion.div>
@@ -202,9 +214,9 @@ export default function ContactsShow({ message }: ContactsShowProps) {
                                                 asChild
                                                 className="hover:bg-accent/50 transition-all duration-200"
                                             >
-                                                <a href={`tel:${message.phone}`}>
+                                                <a href={`https://wa.me/+${message.phone}`} target='_blank'>
                                                     <Phone className="mr-2 h-4 w-4" />
-                                                    Call
+                                                    Contact Via Whatsapp
                                                 </a>
                                             </Button>
                                         </motion.div>
