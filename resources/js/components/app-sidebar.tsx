@@ -2,6 +2,7 @@ import { Link, usePage } from '@inertiajs/react';
 import { 
     BoxIcon, 
     Calendar1, 
+    CreditCard, 
     ImageIcon, 
     LayoutGrid, 
     Mail, 
@@ -32,6 +33,7 @@ const mainNavItems: NavItem[] = [
     { title: 'Gallery', href: '/admin/gallery', icon: ImageIcon },
     { title: 'Clients', href: '/admin/clients', icon: Users },
     { title: 'Contact Messages', href: '/admin/contacts', icon: Mail },
+    { title: 'Payments', href: '/admin/payments', icon: CreditCard },
 ];
 
 export function AppSidebar() {

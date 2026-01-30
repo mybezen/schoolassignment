@@ -127,11 +127,11 @@ export default function ProductShow({ product, relatedProducts }: ProductShowPro
 
                         <motion.div variants={itemVariants}>
                             <Link
-                                href="/contact"
+                                href={`/products/${product.slug}/payment`}
                                 className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-violet-500/25 transition-all hover:shadow-xl hover:shadow-violet-500/40"
                             >
                                 <ShoppingCart className="h-5 w-5" />
-                                Contact Us for More Info
+                                Purchase Now
                                 <ArrowLeft className="h-5 w-5 rotate-180 transition-transform group-hover:translate-x-1" />
                             </Link>
                         </motion.div>

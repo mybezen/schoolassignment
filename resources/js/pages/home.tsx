@@ -7,44 +7,44 @@ import { useState, useEffect } from 'react';
 import VisionMission from './vission-mission';
 
 interface Product {
-    id: number;
-    name: string;
-    slug: string;
-    description: string | null;
-    image: string | null;
-    price: string | null;
+  id: number;
+  name: string;
+  slug: string;
+  description: string | null;
+  image: string | null;
+  price: string | null;
 }
 
 interface Article {
-    id: number;
-    title: string;
-    slug: string;
-    excerpt: string | null;
-    thumbnail: string | null;
-    published_at: string;
+  id: number;
+  title: string;
+  slug: string;
+  excerpt: string | null;
+  thumbnail: string | null;
+  published_at: string;
 }
 
 interface Event {
-    id: number;
-    title: string;
-    slug: string;
-    description: string | null;
-    image: string | null;
-    start_date: string;
-    location: string | null;
+  id: number;
+  title: string;
+  slug: string;
+  description: string | null;
+  image: string | null;
+  start_date: string;
+  location: string | null;
 }
 
 interface Client {
-    id: number;
-    name: string;
-    logo: string;
+  id: number;
+  name: string;
+  logo: string;
 }
 
 interface HomeProps {
-    featuredProducts: Product[];
-    latestArticles: Article[];
-    upcomingEvents: Event[];
-    clients: Client[];
+  featuredProducts: Product[];
+  latestArticles: Article[];
+  upcomingEvents: Event[];
+  clients: Client[];
 }
 
 const pageEntranceVariants: Variants = {
@@ -68,37 +68,37 @@ const heroContainerVariants: Variants = {
 };
 
 const heroItemVariants: Variants = {
-  hidden: { 
-    opacity: 0, 
-    y: 40, 
+  hidden: {
+    opacity: 0,
+    y: 40,
     filter: "blur(8px)",
     scale: 0.96
   },
-  visible: { 
-    opacity: 1, 
-    y: 0, 
+  visible: {
+    opacity: 1,
+    y: 0,
     filter: "blur(0px)",
     scale: 1,
-    transition: { 
-      duration: 1.1, 
-      ease: [0.25, 0.1, 0.25, 1] 
+    transition: {
+      duration: 1.1,
+      ease: [0.25, 0.1, 0.25, 1]
     }
   }
 };
 
 const logoVariants: Variants = {
-  hidden: { 
-    opacity: 0, 
-    scale: 0.5, 
-    filter: "blur(12px)" 
+  hidden: {
+    opacity: 0,
+    scale: 0.5,
+    filter: "blur(12px)"
   },
-  visible: { 
-    opacity: 1, 
-    scale: 1, 
+  visible: {
+    opacity: 1,
+    scale: 1,
     filter: "blur(0px)",
-    transition: { 
-      duration: 1.2, 
-      ease: "easeOut" 
+    transition: {
+      duration: 1.2,
+      ease: "easeOut"
     }
   }
 };
@@ -124,113 +124,113 @@ function EntranceLogo() {
 }
 
 function AboutSection() {
-    const values = [
-        {
-            icon: Target,
-            title: 'Our Mission',
-            description: 'To deliver innovative solutions that drive business growth and create lasting value for our clients.',
-        },
-        {
-            icon: Users,
-            title: 'Our Team',
-            description: 'A diverse group of talented professionals dedicated to excellence and customer satisfaction.',
-        },
-        {
-            icon: Award,
-            title: 'Quality First',
-            description: 'We maintain the highest standards in everything we do, ensuring exceptional results every time.',
-        },
-        {
-            icon: TrendingUp,
-            title: 'Growth Focus',
-            description: 'Committed to continuous improvement and innovation to stay ahead in the industry.',
-        },
-    ];
+  const values = [
+    {
+      icon: Target,
+      title: 'Our Mission',
+      description: 'To deliver innovative solutions that drive business growth and create lasting value for our clients.',
+    },
+    {
+      icon: Users,
+      title: 'Our Team',
+      description: 'A diverse group of talented professionals dedicated to excellence and customer satisfaction.',
+    },
+    {
+      icon: Award,
+      title: 'Quality First',
+      description: 'We maintain the highest standards in everything we do, ensuring exceptional results every time.',
+    },
+    {
+      icon: TrendingUp,
+      title: 'Growth Focus',
+      description: 'Committed to continuous improvement and innovation to stay ahead in the industry.',
+    },
+  ];
 
-    return (
-        <section className="relative py-32">
-            <div className="absolute inset-0 -z-10">
-                <div className="absolute left-1/2 top-0 h-[1px] w-[600px] -translate-x-1/2 bg-gradient-to-r from-transparent via-violet-500/50 to-transparent" />
-            </div>
+  return (
+    <section className="relative py-32">
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute left-1/2 top-0 h-[1px] w-[600px] -translate-x-1/2 bg-gradient-to-r from-transparent via-violet-500/50 to-transparent" />
+      </div>
 
-            <motion.div
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-100px" }}
-                variants={heroContainerVariants}
-                className="space-y-24"
-            >
-                <div className="mx-auto max-w-3xl text-center">
-                    <motion.div variants={heroItemVariants} className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-medium text-zinc-400 backdrop-blur-xl">
-                        <Sparkles className="h-3.5 w-3.5 text-violet-400" />
-                        About Us
-                    </motion.div>
-                    <motion.h2 variants={heroItemVariants} className="mb-6 text-5xl font-bold tracking-tight text-white sm:text-6xl">
-                        Building the Future
-                    </motion.h2>
-                    <motion.p variants={heroItemVariants} className="text-lg leading-relaxed text-zinc-400">
-                        Founded with a vision to transform the industry, we've grown from a small startup to a leading provider of innovative solutions. We believe in the power of technology and human creativity to solve complex challenges.
-                    </motion.p>
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={heroContainerVariants}
+        className="space-y-24"
+      >
+        <div className="mx-auto max-w-3xl text-center">
+          <motion.div variants={heroItemVariants} className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-medium text-zinc-400 backdrop-blur-xl">
+            <Sparkles className="h-3.5 w-3.5 text-violet-400" />
+            About Us
+          </motion.div>
+          <motion.h2 variants={heroItemVariants} className="mb-6 text-5xl font-bold tracking-tight text-white sm:text-6xl">
+            Building the Future
+          </motion.h2>
+          <motion.p variants={heroItemVariants} className="text-lg leading-relaxed text-zinc-400">
+            Founded with a vision to transform the industry, we've grown from a small startup to a leading provider of innovative solutions. We believe in the power of technology and human creativity to solve complex challenges.
+          </motion.p>
+        </div>
+
+        <motion.div
+          variants={heroContainerVariants}
+          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
+        >
+          {values.map((value, index) => {
+            const Icon = value.icon;
+            return (
+              <motion.div
+                key={value.title}
+                variants={heroItemVariants}
+                className="group relative overflow-hidden rounded-2xl border border-white/5 bg-white/[0.02] p-8 backdrop-blur-xl transition-all hover:border-white/10 hover:bg-white/[0.04]"
+              >
+                <div className="absolute inset-0 -z-10 bg-gradient-to-br from-violet-600/0 via-violet-600/5 to-purple-600/0 opacity-0 transition-opacity group-hover:opacity-100" />
+
+                <div className="mb-4 inline-flex rounded-xl border border-white/5 bg-white/5 p-3">
+                  <Icon className="h-6 w-6 text-violet-400" strokeWidth={1.5} />
                 </div>
+                <h3 className="mb-3 text-lg font-semibold text-white">
+                  {value.title}
+                </h3>
+                <p className="text-sm leading-relaxed text-zinc-400">
+                  {value.description}
+                </p>
+              </motion.div>
+            );
+          })}
+        </motion.div>
 
-                <motion.div
-                    variants={heroContainerVariants}
-                    className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
-                >
-                    {values.map((value, index) => {
-                        const Icon = value.icon;
-                        return (
-                            <motion.div
-                                key={value.title}
-                                variants={heroItemVariants}
-                                className="group relative overflow-hidden rounded-2xl border border-white/5 bg-white/[0.02] p-8 backdrop-blur-xl transition-all hover:border-white/10 hover:bg-white/[0.04]"
-                            >
-                                <div className="absolute inset-0 -z-10 bg-gradient-to-br from-violet-600/0 via-violet-600/5 to-purple-600/0 opacity-0 transition-opacity group-hover:opacity-100" />
-                                
-                                <div className="mb-4 inline-flex rounded-xl border border-white/5 bg-white/5 p-3">
-                                    <Icon className="h-6 w-6 text-violet-400" strokeWidth={1.5} />
-                                </div>
-                                <h3 className="mb-3 text-lg font-semibold text-white">
-                                    {value.title}
-                                </h3>
-                                <p className="text-sm leading-relaxed text-zinc-400">
-                                    {value.description}
-                                </p>
-                            </motion.div>
-                        );
-                    })}
-                </motion.div>
-
-                <motion.div
-                    variants={heroItemVariants}
-                    className="relative overflow-hidden rounded-3xl border border-white/5 bg-gradient-to-br from-white/[0.04] to-white/[0.01] p-12 backdrop-blur-xl"
-                >
-                    <div className="absolute right-0 top-0 h-64 w-64 bg-violet-600/10 blur-[128px]" />
-                    <div className="relative grid gap-12 text-center sm:grid-cols-4">
-                        {[
-                            { value: '10+', label: 'Years Experience' },
-                            { value: '500+', label: 'Projects Completed' },
-                            { value: '200+', label: 'Happy Clients' },
-                            { value: '50+', label: 'Team Members' },
-                        ].map((stat, index) => (
-                            <motion.div
-                                key={stat.label}
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: index * 0.1, duration: 0.6 }}
-                            >
-                                <p className="mb-2 bg-gradient-to-br from-white to-white/60 bg-clip-text text-5xl font-bold text-transparent">
-                                    {stat.value}
-                                </p>
-                                <p className="text-sm font-medium text-zinc-400">{stat.label}</p>
-                            </motion.div>
-                        ))}
-                    </div>
-                </motion.div>
-            </motion.div>
-        </section>
-    );
+        <motion.div
+          variants={heroItemVariants}
+          className="relative overflow-hidden rounded-3xl border border-white/5 bg-gradient-to-br from-white/[0.04] to-white/[0.01] p-12 backdrop-blur-xl"
+        >
+          <div className="absolute right-0 top-0 h-64 w-64 bg-violet-600/10 blur-[128px]" />
+          <div className="relative grid gap-12 text-center sm:grid-cols-4">
+            {[
+              { value: '10+', label: 'Years Experience' },
+              { value: '500+', label: 'Projects Completed' },
+              { value: '200+', label: 'Happy Clients' },
+              { value: '50+', label: 'Team Members' },
+            ].map((stat, index) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1, duration: 0.6 }}
+              >
+                <p className="mb-2 bg-gradient-to-br from-white to-white/60 bg-clip-text text-5xl font-bold text-transparent">
+                  {stat.value}
+                </p>
+                <p className="text-sm font-medium text-zinc-400">{stat.label}</p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </motion.div>
+    </section>
+  );
 }
 
 export default function Home({ featuredProducts, latestArticles, upcomingEvents, clients }: HomeProps) {
@@ -291,7 +291,7 @@ export default function Home({ featuredProducts, latestArticles, upcomingEvents,
           >
             <section className="relative min-h-[90vh] flex items-center justify-center pt-20">
               <div className="absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-violet-600/20 to-purple-600/20 blur-[128px]" />
-              
+
               <motion.div
                 initial="hidden"
                 animate="visible"
@@ -366,6 +366,120 @@ export default function Home({ featuredProducts, latestArticles, upcomingEvents,
             </section>
 
             <AboutSection />
+
+            {/* History / Company Profile Section */}
+            <section className="relative py-24 md:py-32">
+              {/* Subtle background accents yang match tema violet */}
+              <div className="absolute inset-0 -z-10 pointer-events-none">
+                <div className="absolute left-1/3 top-1/4 h-96 w-96 bg-violet-600/8 rounded-full blur-3xl" />
+                <div className="absolute right-1/4 bottom-1/3 h-80 w-80 bg-purple-600/8 rounded-full blur-3xl" />
+              </div>
+
+              <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-80px" }}
+                variants={heroContainerVariants}
+                className="relative mx-auto max-w-6xl px-6"
+              >
+                {/* Header */}
+                <div className="text-center mb-12 md:mb-16">
+                  <motion.div
+                    variants={heroItemVariants}
+                    className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-2 text-sm font-medium text-zinc-400 backdrop-blur-xl"
+                  >
+                    <Sparkles className="h-4 w-4 text-violet-400" />
+                    Our Journey
+                  </motion.div>
+
+                  <motion.h2
+                    variants={heroItemVariants}
+                    className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-4"
+                  >
+                    Sejarah ByteCraft
+                  </motion.h2>
+
+                  <motion.p
+                    variants={heroItemVariants}
+                    className="text-lg text-zinc-400 max-w-2xl mx-auto"
+                  >
+                    Dari startup kecil hingga mitra teknologi terpercaya
+                  </motion.p>
+                </div>
+
+                {/* Timeline */}
+                <div className="relative">
+                  {/* Garis vertikal tengah (hanya di desktop) */}
+                  <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-violet-500/30 to-transparent hidden md:block" />
+
+                  <div className="space-y-16 md:space-y-24">
+                    {[
+                      {
+                        year: "2018",
+                        title: "Awal Mula",
+                        description:
+                          "ByteCraft lahir dari semangat sekelompok developer muda yang ingin membuat solusi teknologi sederhana tapi berdampak besar untuk bisnis lokal.",
+                        side: "left",
+                      },
+                      {
+                        year: "2020",
+                        title: "Transformasi Digital",
+                        description:
+                          "Pandemi menjadi katalisator. Kami membantu puluhan UMKM dan bisnis beradaptasi dengan website, sistem manajemen, dan tools digital yang cepat & handal.",
+                        side: "right",
+                      },
+                      {
+                        year: "2022",
+                        title: "Ekspansi & Spesialisasi",
+                        description:
+                          "Tim bertumbuh signifikan. Mulai fokus pada layanan premium: web & mobile app, UI/UX modern, cloud solution, dan integrasi teknologi terkini.",
+                        side: "left",
+                      },
+                      {
+                        year: "2024 – Sekarang",
+                        title: "Inovasi Berkelanjutan",
+                        description:
+                          "Kini ByteCraft terus berinovasi dengan Next.js, Laravel, TypeScript, AI tools, dan arsitektur scalable — siap mendukung bisnis menuju masa depan digital.",
+                        side: "right",
+                      },
+                    ].map((milestone, index) => (
+                      <motion.div
+                        key={milestone.year}
+                        variants={heroItemVariants}
+                        className={`flex flex-col md:flex-row items-center gap-6 md:gap-10 ${milestone.side === "right" ? "md:flex-row-reverse" : ""
+                          }`}
+                      >
+                        {/* Year circle */}
+                        <div className="relative z-10 flex h-16 w-16 md:h-20 md:w-20 shrink-0 items-center justify-center rounded-full border-4 border-violet-600/50 bg-zinc-950/70 backdrop-blur-sm text-xl md:text-2xl font-bold text-violet-300 shadow-lg shadow-violet-900/20">
+                          {milestone.year}
+                        </div>
+
+                        {/* Card konten */}
+                        <div className="flex-1 rounded-2xl border border-white/8 bg-white/[0.03] p-6 md:p-8 backdrop-blur-xl transition-all hover:border-violet-500/30 hover:bg-white/[0.05]">
+                          <h3 className="mb-3 text-xl md:text-2xl font-semibold text-white">{milestone.title}</h3>
+                          <p className="text-base text-zinc-300 leading-relaxed">
+                            {milestone.description}
+                          </p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Penutup singkat */}
+                <motion.div
+                  variants={heroItemVariants}
+                  className="mt-16 md:mt-20 text-center"
+                >
+                  <p className="text-lg md:text-xl text-zinc-300">
+                    Hari ini, ByteCraft tetap berkomitmen: <br />
+                    <span className="font-medium text-violet-400">
+                      Membangun teknologi yang mudah digunakan, tapi punya dampak nyata.
+                    </span>
+                  </p>
+                </motion.div>
+              </motion.div>
+            </section>
 
             {featuredProducts.length > 0 && (
               <section className="py-32">

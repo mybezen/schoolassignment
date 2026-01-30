@@ -8,11 +8,13 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PublicArticleController;
 use App\Http\Controllers\PublicEventController;
 use App\Http\Controllers\PublicGalleryController;
+use App\Http\Controllers\PublicPaymentController;
 use App\Http\Controllers\PublicProductController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -33,6 +35,10 @@ Route::get('/vision-mission', fn () => Inertia::render('vission-mission'))->name
 // Products
 Route::get('/products', [PublicProductController::class, 'index'])->name('products.index');
 Route::get('/products/{product:slug}', [PublicProductController::class, 'show'])->name('products.show');
+Route::get('/products/{product:slug}/payment', [PublicProductController::class, 'payment'])->name('products.payment');
+
+// Payment
+Route::post('/payments', [PublicPaymentController::class, 'store'])->name('payments.store');
 
 // Articles
 Route::get('/articles', [PublicArticleController::class, 'index'])->name('articles.index');
@@ -56,17 +62,24 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
   Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // // Products
+    // Products
     Route::resource('products', ProductController::class);
-    // // Articles
+
+    // Payments
+    Route::get('/payments', [PaymentController::class, 'index'])->name('payments.index');
+    Route::get('/payments/{payment}', [PaymentController::class, 'show'])->name('payments.show');
+    Route::post('/payments/{payment}/confirm', [PaymentController::class, 'confirm'])->name('payments.confirm');
+    Route::post('/payments/{payment}/decline', [PaymentController::class, 'decline'])->name('payments.decline');
+
+    // Articles
     Route::resource('articles', ArticleController::class);
-    // // Events
+    // Events
     Route::resource('events', EventController::class);
-    // // Gallery
+    // Gallery
     Route::resource('gallery', GalleryController::class);
-    // // Clients
+    // Clients
     Route::resource('clients', ClientController::class);
-    // // Contact Messages (Read Only)
+    // Contact Messages (Read Only)
     Route::get('contacts', [ContactMessageController::class, 'index'])->name('contacts.index');
     Route::get('contacts/{contactMessage}', [ContactMessageController::class, 'show'])->name('contacts.show');
     Route::delete('contacts/{contactMessage}', [ContactMessageController::class, 'destroy'])->name('contacts.destroy');

@@ -9,7 +9,7 @@ use Inertia\Inertia;
 
 class PublicProductController extends Controller
 {
-     public function index(): Response
+    public function index(): Response
     {
         $products = Product::where('is_active', true)
             ->orderBy('order')
@@ -34,5 +34,16 @@ class PublicProductController extends Controller
                 ->take(3)
                 ->get(),
         ]);
-    }   
+    }
+
+    public function payment(Product $product): Response
+    {
+        if (!$product->is_active) {
+            abort(404);
+        }
+
+        return Inertia::render('payments/create', [
+            'product' => $product,
+        ]);
+    }
 }
