@@ -2,9 +2,9 @@ import { Head, useForm } from '@inertiajs/react';
 import PublicLayout from '@/layouts/public-layout';
 import { Mail, Phone, MapPin, CheckCircle, Clock, Send, X } from 'lucide-react';
 import { FormEventHandler, useState } from 'react';
-import { motion, AnimatePresence, Variants } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'motion/react';
 
-interface ContactProps {}
+interface ContactProps { }
 
 const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -35,7 +35,7 @@ const dialogVariants: Variants = {
     exit: { opacity: 0, scale: 0.92, y: 20, transition: { duration: 0.2 } },
 };
 
-export default function Contact({}: ContactProps) {
+export default function Contact({ }: ContactProps) {
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         email: '',
@@ -188,9 +188,8 @@ export default function Contact({}: ContactProps) {
                                     <button
                                         type="submit"
                                         disabled={processing}
-                                        className={`group relative flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-violet-500/25 transition-all hover:shadow-xl hover:shadow-violet-500/40 disabled:opacity-60 sm:w-auto ${
-                                            processing ? 'cursor-wait' : ''
-                                        }`}
+                                        className={`group relative flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-violet-500/25 transition-all hover:shadow-xl hover:shadow-violet-500/40 disabled:opacity-60 sm:w-auto ${processing ? 'cursor-wait' : ''
+                                            }`}
                                     >
                                         {processing ? (
                                             <>

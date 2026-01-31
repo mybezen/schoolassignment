@@ -187,7 +187,7 @@ export default function PaymentCreate({ product }: PaymentCreateProps) {
                                 {/* Buyer Information */}
                                 <div className="space-y-4">
                                     <h3 className="text-xl font-semibold text-white mb-4">Contact Information</h3>
-                                    
+
                                     <div>
                                         <Label htmlFor="buyer_name" className="text-white">Full Name *</Label>
                                         <Input
@@ -229,7 +229,7 @@ export default function PaymentCreate({ product }: PaymentCreateProps) {
 
                                 <div className="border-t border-white/10 pt-6">
                                     <h3 className="text-xl font-semibold text-white mb-4">Payment Method</h3>
-                                    
+
                                     <RadioGroup
                                         value={data.payment_method}
                                         onValueChange={(value) => setData('payment_method', value as any)}
@@ -270,8 +270,8 @@ export default function PaymentCreate({ product }: PaymentCreateProps) {
                                                 </h4>
                                                 {data.payment_method === 'qris' ? (
                                                     <div className="mt-3 p-4 bg-white rounded-lg inline-block">
-                                                        <img 
-                                                            src={paymentDestinations.qris} 
+                                                        <img
+                                                            src={paymentDestinations.qris}
                                                             alt="QRIS Code"
                                                             className="w-48 h-48"
                                                         />
@@ -293,7 +293,7 @@ export default function PaymentCreate({ product }: PaymentCreateProps) {
 
                                 <div className="border-t border-white/10 pt-6">
                                     <h3 className="text-xl font-semibold text-white mb-4">Upload Payment Proof</h3>
-                                    
+
                                     <div>
                                         <Label htmlFor="payment_proof" className="text-white">Payment Screenshot/Receipt *</Label>
                                         <div className="mt-2">
@@ -372,7 +372,7 @@ export default function PaymentCreate({ product }: PaymentCreateProps) {
                                 </div>
 
                                 <h2 className="mb-4 text-3xl font-bold text-white">Payment Submitted Successfully!</h2>
-                                
+
                                 <p className="mb-8 text-lg text-zinc-300">
                                     Terima kasih atas pembayarannya!<br />
                                     Kami akan segera memverifikasi bukti pembayaran Anda (biasanya 1–24 jam).
@@ -385,7 +385,7 @@ export default function PaymentCreate({ product }: PaymentCreateProps) {
                                     >
                                         Go to Products Now
                                     </button>
-                                    
+
                                     <button
                                         onClick={() => setShowSuccess(false)}
                                         className="rounded-xl border border-white/20 bg-white/5 px-8 py-4 text-base font-semibold text-white hover:bg-white/10 transition-all"

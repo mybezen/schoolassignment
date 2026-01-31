@@ -9,7 +9,7 @@ import {
     Paperclip, 
     Users 
 } from 'lucide-react';
-import { motion, AnimatePresence, Variants } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'motion/react';
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { NavUser } from '@/components/nav-user';

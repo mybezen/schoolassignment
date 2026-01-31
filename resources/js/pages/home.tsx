@@ -2,7 +2,7 @@ import { Head, Link } from '@inertiajs/react';
 import PublicLayout from '@/layouts/public-layout';
 import { ArrowRight, Target, Users, Award, TrendingUp, Sparkles, Code2 } from 'lucide-react';
 import { format } from 'date-fns';
-import { motion, Variants, AnimatePresence } from 'framer-motion';
+import { motion, Variants, AnimatePresence } from 'motion/react';
 import { useState, useEffect } from 'react';
 import VisionMission from './vission-mission';
 

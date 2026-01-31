@@ -1,5 +1,5 @@
 import { Form, Head } from '@inertiajs/react';
-import { motion } from 'framer-motion'; // pastikan import dari 'framer-motion' (bukan motion/react)
+import { motion } from 'motion/react'; // pastikan import dari 'motion/react' (bukan motion/react)
 import { LogIn, Lock, Mail, Eye, EyeOff } from 'lucide-react';
 
 import InputError from '@/components/input-error';
@@ -67,13 +67,13 @@ export default function Login({
                             <>
                                 <div className="space-y-6">
                                     {/* Email Field */}
-                                    <motion.div 
+                                    <motion.div
                                         custom={0}
                                         variants={fieldVariants}
                                         className="space-y-2"
                                     >
-                                        <Label 
-                                            htmlFor="email" 
+                                        <Label
+                                            htmlFor="email"
                                             className="text-white/80 text-sm font-medium flex items-center gap-2"
                                         >
                                             <Mail className="w-4 h-4 text-blue-400/70" />
@@ -98,14 +98,14 @@ export default function Login({
                                     </motion.div>
 
                                     {/* Password Field */}
-                                    <motion.div 
+                                    <motion.div
                                         custom={1}
                                         variants={fieldVariants}
                                         className="space-y-2"
                                     >
                                         <div className="flex items-center justify-between">
-                                            <Label 
-                                                htmlFor="password" 
+                                            <Label
+                                                htmlFor="password"
                                                 className="text-white/80 text-sm font-medium flex items-center gap-2"
                                             >
                                                 <Lock className="w-4 h-4 text-blue-400/70" />
@@ -147,7 +147,7 @@ export default function Login({
                                     </motion.div>
 
                                     {/* Remember Me */}
-                                    <motion.div 
+                                    <motion.div
                                         custom={2}
                                         variants={fieldVariants}
                                         className="flex items-center gap-3 bg-white/[0.03] border border-white/10 p-4 rounded-xl"
@@ -197,7 +197,7 @@ export default function Login({
                     </Form>
 
                     {status && (
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.6 }}

@@ -1,7 +1,7 @@
 import { Link } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
 import { Menu, X, Code2 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
@@ -30,11 +30,10 @@ export default function Navbar() {
         <motion.nav
             initial={{ y: -100 }}
             animate={{ y: 0 }}
-            className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-                scrolled
+            className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${scrolled
                     ? 'bg-black/60 backdrop-blur-2xl border-b border-white/5'
                     : 'bg-transparent'
-            }`}
+                }`}
         >
             <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
                 <div className="flex h-16 items-center justify-between">
