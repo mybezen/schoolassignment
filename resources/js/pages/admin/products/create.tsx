@@ -1,7 +1,7 @@
 import { Head, useForm } from '@inertiajs/react';
 import { FormEventHandler, useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { CheckCircle2, Package, Image as ImageIcon, DollarSign, Hash } from 'lucide-react';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
+import { CheckCircle2, XCircle, Package, Image as ImageIcon, Loader2 } from 'lucide-react';
 
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,21 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
+// Motion wrappers
+const MotionInput = motion(Input);
+const MotionTextarea = motion(Textarea);
+
+const inputVariants: Variants = {
+    initial: { scale: 1, boxShadow: '0 0 0 0 rgba(var(--primary), 0)' },
+    focus: { scale: 1.015, boxShadow: '0 0 0 4px rgba(var(--primary), 0.12)' },
+    error: { x: [0, -5, 5, -3, 3, 0], transition: { duration: 0.4 } },
+};
+
+const checkVariants: Variants = {
+    hidden: { scale: 0, opacity: 0 },
+    visible: { scale: 1, opacity: 1, transition: { type: 'spring', stiffness: 280, damping: 22 } },
+};
 
 export default function ProductsCreate() {
     const { data, setData, post, processing, errors } = useForm({
@@ -22,6 +37,7 @@ export default function ProductsCreate() {
         order: 0,
     });
 
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [showSuccess, setShowSuccess] = useState(false);
     const [focusedField, setFocusedField] = useState<string | null>(null);
 
@@ -30,353 +46,240 @@ export default function ProductsCreate() {
         post('/admin/products', {
             onSuccess: () => {
                 setShowSuccess(true);
-                setTimeout(() => setShowSuccess(false), 3000);
+                setTimeout(() => setShowSuccess(false), 4000);
             },
         });
+    };
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setData('image', file);
+            const reader = new FileReader();
+            reader.onloadend = () => setImagePreview(reader.result as string);
+            reader.readAsDataURL(file);
+        }
     };
 
     return (
         <AppLayout>
             <Head title="Create Product" />
 
-            <motion.div 
-                className="flex h-full flex-1 justify-center p-6 overflow-x-auto"
+            <motion.div
+                className="flex min-h-screen flex-1 justify-center p-6 md:p-8 lg:p-10 bg-background"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.4 }}
             >
-                <div className="mx-auto w-full max-w-4xl space-y-6">
-                    <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                    >
-                        <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent">
-                            Create Product
-                        </h1>
-                        <p className="text-muted-foreground mt-1">Add a new product to your catalog</p>
+                <div className="w-full max-w-4xl space-y-8">
+                    {/* Header */}
+                    <motion.div initial={{ opacity: 0, y: -24 }} animate={{ opacity: 1, y: 0 }}>
+                        <h1 className="text-3xl font-bold tracking-tight">Create New Product</h1>
+                        <p className="mt-2 text-muted-foreground">
+                            Fill in the details to add a product to your catalog
+                        </p>
                     </motion.div>
 
+                    {/* Success */}
                     <AnimatePresence>
                         {showSuccess && (
                             <motion.div
-                                initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                                initial={{ opacity: 0, y: -20, scale: 0.95 }}
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                                exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                                transition={{ duration: 0.3 }}
-                                className="bg-primary/10 border border-primary/20 rounded-lg p-4 flex items-center gap-3 shadow-lg shadow-primary/10"
+                                exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                                className="rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 p-4 flex items-center gap-3 shadow-sm"
                             >
-                                <motion.div
-                                    initial={{ scale: 0 }}
-                                    animate={{ scale: 1 }}
-                                    transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
-                                >
-                                    <CheckCircle2 className="h-5 w-5 text-primary" />
-                                </motion.div>
-                                <p className="text-sm font-medium">Product created successfully!</p>
+                                <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                                <p className="font-medium text-emerald-800 dark:text-emerald-200">
+                                    Product created successfully!
+                                </p>
                             </motion.div>
                         )}
                     </AnimatePresence>
 
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-                    >
-                        <Card className="border-border/50 shadow-xl shadow-black/5 bg-card/50 backdrop-blur-sm">
-                            <CardHeader className="border-b border-border/50">
-                                <CardTitle className="flex items-center gap-2">
-                                    <Package className="h-5 w-5 text-primary" />
-                                    Product Information
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="pt-6">
-                                <form onSubmit={submit} className="space-y-6">
-                                    <motion.div 
-                                        className="space-y-2"
-                                        initial={{ opacity: 0, x: -20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: 0.2 }}
-                                    >
-                                        <Label htmlFor="name" className="text-sm font-medium">
-                                            Name <span className="text-destructive">*</span>
-                                        </Label>
-                                        <Input
-                                            id="name"
-                                            value={data.name}
-                                            onChange={(e) => setData('name', e.target.value)}
-                                            onFocus={() => setFocusedField('name')}
-                                            onBlur={() => setFocusedField(null)}
-                                            required
-                                            className={`transition-all duration-200 ${
-                                                focusedField === 'name' 
-                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' 
-                                                    : ''
-                                            }`}
-                                            placeholder="Enter product name"
-                                        />
-                                        <AnimatePresence>
-                                            {errors.name && (
-                                                <motion.p
-                                                    initial={{ opacity: 0, y: -10 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    exit={{ opacity: 0, y: -10 }}
-                                                    className="text-sm text-destructive"
-                                                >
-                                                    {errors.name}
-                                                </motion.p>
-                                            )}
-                                        </AnimatePresence>
-                                    </motion.div>
+                    <Card className="border-border/50 shadow-xl bg-card/90 backdrop-blur-sm overflow-hidden">
+                        <CardHeader className="pb-6 border-b bg-muted/30">
+                            <CardTitle className="flex items-center gap-2.5 text-xl">
+                                <Package className="h-5 w-5 text-primary" />
+                                Product Details
+                            </CardTitle>
+                        </CardHeader>
 
-                                    <motion.div 
-                                        className="space-y-2"
-                                        initial={{ opacity: 0, x: -20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: 0.25 }}
-                                    >
-                                        <Label htmlFor="description">Description</Label>
-                                        <Textarea
-                                            id="description"
-                                            value={data.description}
-                                            onChange={(e) => setData('description', e.target.value)}
-                                            onFocus={() => setFocusedField('description')}
-                                            onBlur={() => setFocusedField(null)}
-                                            rows={2}
-                                            placeholder="Brief product description"
-                                            className={`transition-all duration-200 ${
-                                                focusedField === 'description' 
-                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' 
-                                                    : ''
-                                            }`}
-                                        />
-                                        <AnimatePresence>
-                                            {errors.description && (
-                                                <motion.p
-                                                    initial={{ opacity: 0, y: -10 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    exit={{ opacity: 0, y: -10 }}
-                                                    className="text-sm text-destructive"
-                                                >
-                                                    {errors.description}
-                                                </motion.p>
-                                            )}
-                                        </AnimatePresence>
-                                    </motion.div>
+                        <CardContent className="pt-10 pb-12 px-6 md:px-8">
+                            <form onSubmit={submit} className="space-y-8">
+                                {(['name', 'description', 'content', 'price', 'order'] as const).map((field, i) => {
+                                    const isFocused = focusedField === field;
+                                    const hasError = !!errors[field];
+                                    const value = data[field];
+                                    const isFilled =
+                                        typeof value === 'string'
+                                            ? value.trim().length > 0
+                                            : Number(value) !== 0;
 
-                                    <motion.div 
-                                        className="space-y-2"
-                                        initial={{ opacity: 0, x: -20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: 0.3 }}
-                                    >
-                                        <Label htmlFor="content">Content</Label>
-                                        <Textarea
-                                            id="content"
-                                            value={data.content}
-                                            onChange={(e) => setData('content', e.target.value)}
-                                            onFocus={() => setFocusedField('content')}
-                                            onBlur={() => setFocusedField(null)}
-                                            rows={5}
-                                            placeholder="Detailed product information"
-                                            className={`transition-all duration-200 ${
-                                                focusedField === 'content' 
-                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' 
-                                                    : ''
-                                            }`}
-                                        />
-                                        <AnimatePresence>
-                                            {errors.content && (
-                                                <motion.p
-                                                    initial={{ opacity: 0, y: -10 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    exit={{ opacity: 0, y: -10 }}
-                                                    className="text-sm text-destructive"
-                                                >
-                                                    {errors.content}
-                                                </motion.p>
-                                            )}
-                                        </AnimatePresence>
-                                    </motion.div>
+                                    return (
+                                        <motion.div
+                                            key={field}
+                                            className="space-y-2"
+                                            initial={{ opacity: 0, y: 16 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: 0.08 + i * 0.07, duration: 0.45 }}
+                                        >
+                                            <Label htmlFor={field} className="text-sm font-medium">
+                                                {field.charAt(0).toUpperCase() + field.slice(1)}
+                                                {field === 'name' && <span className="text-destructive ml-1">*</span>}
+                                            </Label>
 
-                                    <motion.div 
-                                        className="space-y-2"
-                                        initial={{ opacity: 0, x: -20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: 0.35 }}
-                                    >
-                                        <Label htmlFor="price" className="flex items-center gap-2">
-                                            <DollarSign className="h-4 w-4" />
-                                            Price
-                                        </Label>
-                                        <Input
-                                            id="price"
-                                            type="number"
-                                            step="0.01"
-                                            value={data.price}
-                                            onChange={(e) => setData('price', e.target.value)}
-                                            onFocus={() => setFocusedField('price')}
-                                            onBlur={() => setFocusedField(null)}
-                                            placeholder="0.00"
-                                            className={`transition-all duration-200 ${
-                                                focusedField === 'price' 
-                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' 
-                                                    : ''
-                                            }`}
-                                        />
-                                        <AnimatePresence>
-                                            {errors.price && (
-                                                <motion.p
-                                                    initial={{ opacity: 0, y: -10 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    exit={{ opacity: 0, y: -10 }}
-                                                    className="text-sm text-destructive"
-                                                >
-                                                    {errors.price}
-                                                </motion.p>
-                                            )}
-                                        </AnimatePresence>
-                                    </motion.div>
+                                            {field === 'description' || field === 'content' ? (
+                                                <MotionTextarea
+                                                    id={field}
+                                                    value={(data[field] as string) || ''}
+                                                    onChange={(e) => setData(field, e.target.value)}
+                                                    onFocus={() => setFocusedField(field)}
+                                                    onBlur={() => setFocusedField(null)}
+                                                    placeholder={`Enter ${field}...`}
+                                                    rows={field === 'content' ? 7 : 4}
+                                                    className="min-h-[120px] px-5 py-4 rounded-xl border border-input bg-background text-base resize-y focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary transition-all duration-200"
+                                                    variants={inputVariants}
+                                                    animate={hasError ? 'error' : isFocused ? 'focus' : 'initial'}
+                                                />
+                                            ) : (
+                                                <div className="relative">
+                                                    <MotionInput
+                                                        id={field}
+                                                        type={field === 'price' || field === 'order' ? 'number' : 'text'}
+                                                        step={field === 'price' ? '0.01' : undefined}
+                                                        value={data[field] ?? (field === 'order' ? 0 : '')}
+                                                        onChange={(e) =>
+                                                            setData(
+                                                                field,
+                                                                field === 'order' ? parseInt(e.target.value) || 0 : e.target.value
+                                                            )
+                                                        }
+                                                        onFocus={() => setFocusedField(field)}
+                                                        onBlur={() => setFocusedField(null)}
+                                                        placeholder={`Enter ${field}...`}
+                                                        className="h-14 px-5 rounded-xl border border-input bg-background text-base focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary transition-all duration-200"
+                                                        variants={inputVariants}
+                                                        animate={hasError ? 'error' : isFocused ? 'focus' : 'initial'}
+                                                    />
 
-                                    <motion.div 
-                                        className="space-y-2"
-                                        initial={{ opacity: 0, x: -20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: 0.4 }}
-                                    >
-                                        <Label htmlFor="image" className="flex items-center gap-2">
-                                            <ImageIcon className="h-4 w-4" />
-                                            Image
-                                        </Label>
+                                                    <AnimatePresence>
+                                                        {(isFilled || hasError) && (
+                                                            <motion.div
+                                                                initial={{ scale: 0, opacity: 0 }}
+                                                                animate="visible"
+                                                                exit={{ scale: 0, opacity: 0 }}
+                                                                variants={checkVariants}
+                                                                className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"
+                                                            >
+                                                                {hasError ? (
+                                                                    <XCircle className="h-5 w-5 text-destructive" />
+                                                                ) : (
+                                                                    <CheckCircle2 className="h-5 w-5 text-emerald-600" />
+                                                                )}
+                                                            </motion.div>
+                                                        )}
+                                                    </AnimatePresence>
+                                                </div>
+                                            )}
+
+                                            <AnimatePresence>
+                                                {hasError && (
+                                                    <motion.p
+                                                        initial={{ opacity: 0, y: -8 }}
+                                                        animate={{ opacity: 1, y: 0 }}
+                                                        exit={{ opacity: 0, y: -8 }}
+                                                        className="text-sm text-destructive mt-1.5 pl-1"
+                                                    >
+                                                        {errors[field]}
+                                                    </motion.p>
+                                                )}
+                                            </AnimatePresence>
+                                        </motion.div>
+                                    );
+                                })}
+
+                                {/* Image */}
+                                <motion.div
+                                    className="space-y-3"
+                                    initial={{ opacity: 0, y: 16 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.5 }}
+                                >
+                                    <Label htmlFor="image" className="text-sm font-medium flex items-center gap-2">
+                                        <ImageIcon className="h-4 w-4" />
+                                        Product Image
+                                    </Label>
+                                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                                         <Input
                                             id="image"
                                             type="file"
                                             accept="image/*"
-                                            onChange={(e) =>
-                                                setData('image', e.target.files?.[0] || null)
-                                            }
-                                            onFocus={() => setFocusedField('image')}
-                                            onBlur={() => setFocusedField(null)}
-                                            className={`transition-all duration-200 cursor-pointer ${
-                                                focusedField === 'image' 
-                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' 
-                                                    : ''
-                                            }`}
+                                            onChange={handleImageChange}
+                                            className="h-14 file:h-11 file:my-1 cursor-pointer file:mr-4 file:px-5 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-colors"
                                         />
-                                        <AnimatePresence>
-                                            {errors.image && (
-                                                <motion.p
-                                                    initial={{ opacity: 0, y: -10 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    exit={{ opacity: 0, y: -10 }}
-                                                    className="text-sm text-destructive"
-                                                >
-                                                    {errors.image}
-                                                </motion.p>
-                                            )}
-                                        </AnimatePresence>
-                                    </motion.div>
-
-                                    <motion.div 
-                                        className="space-y-2"
-                                        initial={{ opacity: 0, x: -20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: 0.45 }}
-                                    >
-                                        <Label htmlFor="order" className="flex items-center gap-2">
-                                            <Hash className="h-4 w-4" />
-                                            Display Order
-                                        </Label>
-                                        <Input
-                                            id="order"
-                                            type="number"
-                                            value={data.order}
-                                            onChange={(e) => setData('order', parseInt(e.target.value))}
-                                            onFocus={() => setFocusedField('order')}
-                                            onBlur={() => setFocusedField(null)}
-                                            className={`transition-all duration-200 ${
-                                                focusedField === 'order' 
-                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' 
-                                                    : ''
-                                            }`}
-                                        />
-                                        <AnimatePresence>
-                                            {errors.order && (
-                                                <motion.p
-                                                    initial={{ opacity: 0, y: -10 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    exit={{ opacity: 0, y: -10 }}
-                                                    className="text-sm text-destructive"
-                                                >
-                                                    {errors.order}
-                                                </motion.p>
-                                            )}
-                                        </AnimatePresence>
-                                    </motion.div>
-
-                                    <motion.div 
-                                        className="flex items-center space-x-3 p-4 rounded-lg bg-muted/30 border border-border/50"
-                                        initial={{ opacity: 0, x: -20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: 0.5 }}
-                                    >
-                                        <Switch
-                                            id="is_active"
-                                            checked={data.is_active}
-                                            onCheckedChange={(checked) => setData('is_active', checked)}
-                                            className="data-[state=checked]:bg-primary"
-                                        />
-                                        <Label htmlFor="is_active" className="cursor-pointer">
-                                            Active Status
-                                        </Label>
-                                    </motion.div>
-
-                                    <motion.div 
-                                        className="flex gap-3 pt-4"
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: 0.55 }}
-                                    >
-                                        <motion.div
-                                            whileHover={{ scale: 1.02 }}
-                                            whileTap={{ scale: 0.98 }}
-                                            className="flex-1"
-                                        >
-                                            <Button 
-                                                type="submit" 
-                                                disabled={processing}
-                                                className="w-full shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all duration-300"
+                                        {imagePreview && (
+                                            <motion.div
+                                                initial={{ opacity: 0, scale: 0.9 }}
+                                                animate={{ opacity: 1, scale: 1 }}
+                                                className="h-24 w-24 rounded-xl overflow-hidden border bg-muted shadow-sm"
                                             >
-                                                {processing ? (
-                                                    <motion.div
-                                                        animate={{ rotate: 360 }}
-                                                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                                                    >
-                                                        <Package className="h-4 w-4 mr-2" />
-                                                    </motion.div>
-                                                ) : (
-                                                    'Create Product'
-                                                )}
-                                            </Button>
-                                        </motion.div>
-                                        <motion.div
-                                            whileHover={{ scale: 1.02 }}
-                                            whileTap={{ scale: 0.98 }}
-                                        >
-                                            <Button
-                                                type="button"
-                                                variant="outline"
-                                                onClick={() => window.history.back()}
-                                                className="hover:bg-accent/50 transition-all duration-200"
-                                            >
-                                                Cancel
-                                            </Button>
-                                        </motion.div>
-                                    </motion.div>
-                                </form>
-                            </CardContent>
-                        </Card>
-                    </motion.div>
+                                                <img src={imagePreview} alt="Preview" className="h-full w-full object-cover" />
+                                            </motion.div>
+                                        )}
+                                    </div>
+                                    {errors.image && (
+                                        <p className="text-sm text-destructive mt-1.5">{errors.image}</p>
+                                    )}
+                                </motion.div>
+
+                                {/* Switch */}
+                                <motion.div
+                                    className="flex items-center gap-4 rounded-xl border bg-muted/40 px-6 py-5"
+                                    whileHover={{ scale: 1.005 }}
+                                    initial={{ opacity: 0, y: 16 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.58 }}
+                                >
+                                    <Switch
+                                        id="is_active"
+                                        checked={data.is_active}
+                                        onCheckedChange={(checked) => setData('is_active', checked)}
+                                    />
+                                    <Label htmlFor="is_active" className="cursor-pointer text-base font-medium">
+                                        Active / Visible in Store
+                                    </Label>
+                                </motion.div>
+
+                                {/* Buttons */}
+                                <div className="flex flex-col sm:flex-row gap-4 pt-10">
+                                    <Button
+                                        type="submit"
+                                        disabled={processing}
+                                        className="flex-1 h-12 font-medium shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all"
+                                    >
+                                        {processing ? (
+                                            <div className="flex items-center gap-2">
+                                                <Loader2 className="h-5 w-5 animate-spin" />
+                                                Creating...
+                                            </div>
+                                        ) : (
+                                            'Create Product'
+                                        )}
+                                    </Button>
+
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        onClick={() => window.history.back()}
+                                        className="h-12 px-10 text-base"
+                                    >
+                                        Cancel
+                                    </Button>
+                                </div>
+                            </form>
+                        </CardContent>
+                    </Card>
                 </div>
             </motion.div>
         </AppLayout>

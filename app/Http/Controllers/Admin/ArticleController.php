@@ -52,12 +52,16 @@ class ArticleController extends Controller
     {
         $data = $request->validated();
 
+        // HANYA proses thumbnail jika benar-benar ada file baru yang diupload
         if ($request->hasFile('thumbnail')) {
+            // Hapus thumbnail lama jika ada
             if ($article->thumbnail) {
                 Storage::disk('public')->delete($article->thumbnail);
             }
+            // Simpan thumbnail baru
             $data['thumbnail'] = $request->file('thumbnail')->store('articles', 'public');
         }
+        // Jika tidak ada file baru → kolom thumbnail tidak diubah (tetap seperti semula)
 
         $article->update($data);
 

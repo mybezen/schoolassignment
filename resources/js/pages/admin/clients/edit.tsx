@@ -1,7 +1,7 @@
 import { Head, useForm } from '@inertiajs/react';
 import { FormEventHandler, useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { CheckCircle2, Users, Globe, ImageIcon } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion'; // perbaiki import
+import { CheckCircle2, Users, Globe, Image as ImageIcon, X } from 'lucide-react';
 
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
@@ -26,18 +26,42 @@ interface ClientsEditProps {
 }
 
 export default function ClientsEdit({ client }: ClientsEditProps) {
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, processing, errors } = useForm<{
+        name: string;
+        logo?: File | null;           // optional, tidak di-set null default
+        website: string;
+        description: string;
+        order: number;
+        is_active: boolean;
+        _method: string;
+    }>({
         name: client.name,
-        logo: null as File | null,
         website: client.website || '',
         description: client.description || '',
         order: client.order,
         is_active: client.is_active,
+        // logo dibiarkan undefined agar tidak dikirim jika tidak berubah
         _method: 'PUT',
     });
 
+    const [previewLogo, setPreviewLogo] = useState<string | null>(null);
     const [showSuccess, setShowSuccess] = useState(false);
     const [focusedField, setFocusedField] = useState<string | null>(null);
+
+    const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setData('logo', file);
+            setPreviewLogo(URL.createObjectURL(file));
+        }
+    };
+
+    const clearNewLogo = () => {
+        setData('logo', null);
+        setPreviewLogo(null);
+        const fileInput = document.getElementById('logo') as HTMLInputElement;
+        if (fileInput) fileInput.value = '';
+    };
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
@@ -45,7 +69,9 @@ export default function ClientsEdit({ client }: ClientsEditProps) {
             onSuccess: () => {
                 setShowSuccess(true);
                 setTimeout(() => setShowSuccess(false), 3000);
+                setPreviewLogo(null); // reset preview setelah sukses
             },
+            preserveScroll: true,
         });
     };
 
@@ -106,6 +132,7 @@ export default function ClientsEdit({ client }: ClientsEditProps) {
                             </CardHeader>
                             <CardContent className="pt-6">
                                 <form onSubmit={submit} className="space-y-6">
+                                    {/* Name */}
                                     <motion.div 
                                         className="space-y-2"
                                         initial={{ opacity: 0, x: -20 }}
@@ -142,6 +169,7 @@ export default function ClientsEdit({ client }: ClientsEditProps) {
                                         </AnimatePresence>
                                     </motion.div>
 
+                                    {/* Logo - Bagian yang diperbaiki */}
                                     <motion.div 
                                         className="space-y-2"
                                         initial={{ opacity: 0, x: -20 }}
@@ -152,27 +180,32 @@ export default function ClientsEdit({ client }: ClientsEditProps) {
                                             <ImageIcon className="h-4 w-4" />
                                             Logo
                                         </Label>
-                                        <motion.div 
-                                            className="mb-3"
-                                            initial={{ opacity: 0, scale: 0.95 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            transition={{ delay: 0.3 }}
-                                        >
-                                            <div className="relative h-24 w-24 rounded-lg overflow-hidden ring-1 ring-border/50 shadow-lg bg-background/80 p-2">
+
+                                        {/* Preview: prioritas logo baru, fallback ke lama */}
+                                        {(previewLogo || client.logo) && (
+                                            <div className="relative inline-block h-24 w-24 rounded-lg overflow-hidden ring-1 ring-border/50 shadow-lg bg-background/80 p-2 group">
                                                 <img
-                                                    src={`/storage/${client.logo}`}
+                                                    src={previewLogo || `/storage/${client.logo}`}
                                                     alt={client.name}
                                                     className="h-full w-full object-contain"
                                                 />
+                                                {previewLogo && (
+                                                    <button
+                                                        type="button"
+                                                        onClick={clearNewLogo}
+                                                        className="absolute -top-2 -right-2 bg-black/70 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-md"
+                                                    >
+                                                        <X className="h-3.5 w-3.5" />
+                                                    </button>
+                                                )}
                                             </div>
-                                        </motion.div>
+                                        )}
+
                                         <Input
                                             id="logo"
                                             type="file"
                                             accept="image/*"
-                                            onChange={(e) =>
-                                                setData('logo', e.target.files?.[0] || null)
-                                            }
+                                            onChange={handleLogoChange}
                                             onFocus={() => setFocusedField('logo')}
                                             onBlur={() => setFocusedField(null)}
                                             className={`transition-all duration-200 cursor-pointer ${
@@ -181,9 +214,13 @@ export default function ClientsEdit({ client }: ClientsEditProps) {
                                                     : ''
                                             }`}
                                         />
-                                        <p className="text-xs text-muted-foreground">
-                                            Leave empty to keep current logo
-                                        </p>
+
+                                        {previewLogo && (
+                                            <p className="text-xs text-muted-foreground mt-1">
+                                                Logo baru dipilih (logo lama akan diganti saat disimpan)
+                                            </p>
+                                        )}
+
                                         <AnimatePresence>
                                             {errors.logo && (
                                                 <motion.p
@@ -198,6 +235,7 @@ export default function ClientsEdit({ client }: ClientsEditProps) {
                                         </AnimatePresence>
                                     </motion.div>
 
+                                    {/* Website */}
                                     <motion.div 
                                         className="space-y-2"
                                         initial={{ opacity: 0, x: -20 }}
@@ -236,6 +274,7 @@ export default function ClientsEdit({ client }: ClientsEditProps) {
                                         </AnimatePresence>
                                     </motion.div>
 
+                                    {/* Description */}
                                     <motion.div 
                                         className="space-y-2"
                                         initial={{ opacity: 0, x: -20 }}
@@ -273,6 +312,7 @@ export default function ClientsEdit({ client }: ClientsEditProps) {
                                         </AnimatePresence>
                                     </motion.div>
 
+                                    {/* Order */}
                                     <motion.div 
                                         className="space-y-2"
                                         initial={{ opacity: 0, x: -20 }}
@@ -286,7 +326,7 @@ export default function ClientsEdit({ client }: ClientsEditProps) {
                                             id="order"
                                             type="number"
                                             value={data.order}
-                                            onChange={(e) => setData('order', parseInt(e.target.value))}
+                                            onChange={(e) => setData('order', parseInt(e.target.value) || 0)}
                                             onFocus={() => setFocusedField('order')}
                                             onBlur={() => setFocusedField(null)}
                                             className={`transition-all duration-200 ${
@@ -309,6 +349,7 @@ export default function ClientsEdit({ client }: ClientsEditProps) {
                                         </AnimatePresence>
                                     </motion.div>
 
+                                    {/* Active Switch */}
                                     <motion.div 
                                         className="flex items-center space-x-3 p-4 rounded-lg bg-muted/30 border border-border/50"
                                         initial={{ opacity: 0, x: -20 }}
@@ -326,47 +367,27 @@ export default function ClientsEdit({ client }: ClientsEditProps) {
                                         </Label>
                                     </motion.div>
 
+                                    {/* Buttons */}
                                     <motion.div 
                                         className="flex gap-3 pt-4"
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.55 }}
                                     >
-                                        <motion.div
-                                            whileHover={{ scale: 1.02 }}
-                                            whileTap={{ scale: 0.98 }}
-                                            className="flex-1"
+                                        <Button 
+                                            type="submit" 
+                                            disabled={processing}
+                                            className="flex-1 shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all duration-300"
                                         >
-                                            <Button 
-                                                type="submit" 
-                                                disabled={processing}
-                                                className="w-full shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all duration-300"
-                                            >
-                                                {processing ? (
-                                                    <motion.div
-                                                        animate={{ rotate: 360 }}
-                                                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                                                    >
-                                                        <Users className="h-4 w-4 mr-2" />
-                                                    </motion.div>
-                                                ) : (
-                                                    'Update Client'
-                                                )}
-                                            </Button>
-                                        </motion.div>
-                                        <motion.div
-                                            whileHover={{ scale: 1.02 }}
-                                            whileTap={{ scale: 0.98 }}
+                                            {processing ? 'Processing...' : 'Update Client'}
+                                        </Button>
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            onClick={() => window.history.back()}
                                         >
-                                            <Button
-                                                type="button"
-                                                variant="outline"
-                                                onClick={() => window.history.back()}
-                                                className="hover:bg-accent/50 transition-all duration-200"
-                                            >
-                                                Cancel
-                                            </Button>
-                                        </motion.div>
+                                            Cancel
+                                        </Button>
                                     </motion.div>
                                 </form>
                             </CardContent>

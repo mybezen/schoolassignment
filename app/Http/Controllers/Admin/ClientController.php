@@ -49,10 +49,16 @@ class ClientController extends Controller
     {
         $data = $request->validated();
 
+        // HANYA proses logo jika benar-benar ada file baru yang diupload
         if ($request->hasFile('logo')) {
-            Storage::disk('public')->delete($client->logo);
+            // Hapus logo lama jika ada
+            if ($client->logo) {
+                Storage::disk('public')->delete($client->logo);
+            }
+            // Simpan logo baru
             $data['logo'] = $request->file('logo')->store('clients', 'public');
         }
+        // Jika tidak ada file baru → kolom logo tidak diubah (tetap seperti semula)
 
         $client->update($data);
 

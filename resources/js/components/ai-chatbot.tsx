@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Code2, X, Send, ChevronDown } from 'lucide-react';
 
@@ -9,25 +9,34 @@ interface Message {
 
 const faqDatabase = [
   {
-    keywords: ['register', 'akun', 'login', 'daftar'],
+    keywords: ['register', 'akun', 'login', 'daftar', 'butuh akun', 'konsultasi'],
     answer: 'Fitur login dan register saat ini hanya untuk Admin Panel kami. Untuk pelanggan, Anda tidak perlu akun. Langsung hubungi kami via halaman Contact untuk konsultasi project software development Anda. Kami spesialis dalam custom software seperti web apps, mobile apps, dan AI solutions!'
   },
   {
-    keywords: ['pesan', 'order', 'beli', 'hubungi', 'project'],
+    keywords: ['pesan', 'order', 'beli', 'hubungi', 'project', 'cara pesan', 'jasa development'],
     answer: 'Untuk memesan produk/jasa software development, isi form di halaman Contact. Kami akan balas via email atau WhatsApp yang Anda cantumkan untuk diskusikan detail project, seperti requirement gathering, tech stack (React, Node.js, dll), timeline, dan biaya. Contoh: Kami bisa develop custom CRM system dalam 4-8 minggu!'
   },
   {
-    keywords: ['demo', 'trial', 'contoh'],
+    keywords: ['demo', 'trial', 'contoh', 'ada demo', 'gratis'],
     answer: 'Ya, kami sediakan demo gratis untuk sebagian besar produk software kami. Hubungi via Contact untuk jadwalkan sesi demo. Misalnya, demo web app kami menggunakan Framer Motion untuk animasi smooth seperti ini chatbot!'
   },
   {
-    keywords: ['lama', 'proses', 'waktu', 'pengerjaan'],
+    keywords: ['lama', 'proses', 'waktu', 'pengerjaan', 'berapa lama', 'project custom'],
     answer: 'Waktu pengerjaan project software custom tergantung kompleksitas, rata-rata 4-12 minggu. Kami pakai agile methodology untuk faster iteration. Contoh: Simple web app bisa selesai 4 minggu, full enterprise system 8-12 minggu. Mari diskusikan project Anda!'
   },
   {
-    keywords: ['layanan', 'jasa', 'software', 'development'],
+    keywords: ['layanan', 'jasa', 'software', 'development', 'tersedia', 'apa saja'],
     answer: 'Sebagai perusahaan software development, kami spesialis dalam: Custom Web/Mobile Apps, AI/ML Integration, Cloud Solutions (AWS/Azure), dan DevOps. Tech stack kami: React, Next.js, Node.js, Python, dan lebih. Ready to code your vision?'
   }
+];
+
+// Suggested questions - diintegrasikan ke faqDatabase via keywords
+const suggestedQuestions = [
+  { text: 'Layanan software development apa yang tersedia?', category: 'services' },
+  { text: 'Berapa lama pengerjaan project custom?', category: 'timeline' },
+  { text: 'Apakah ada demo gratis?', category: 'demo' },
+  { text: 'Cara pesan jasa development?', category: 'order' },
+  { text: 'Butuh akun untuk konsultasi?', category: 'account' },
 ];
 
 export default function AiChatbot() {
@@ -40,35 +49,51 @@ export default function AiChatbot() {
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(true);
 
-  const handleSend = () => {
-    if (!input.trim()) return;
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-    setMessages(prev => [...prev, { text: input.trim(), isBot: false }]);
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, isTyping]);
+
+  const handleSend = (messageText?: string) => {
+    const textToSend = messageText || input.trim();
+    if (!textToSend) return;
+
+    setMessages(prev => [...prev, { text: textToSend, isBot: false }]);
     setInput('');
     setIsTyping(true);
+    setShowSuggestions(false); // Auto hide suggestions setelah kirim
 
     setTimeout(() => {
-      const lowerInput = input.toLowerCase();
+      const lowerInput = textToSend.toLowerCase();
       const matched = faqDatabase.find(faq => faq.keywords.some(kw => lowerInput.includes(kw)));
       
       let response = matched 
         ? matched.answer 
         : 'Maaf, saya belum paham maksudnya. Coba jelaskan lebih detail ya! Atau langsung hubungi tim kami di halaman Contact untuk diskusi project software Anda. Contoh pertanyaan: "Berapa lama bikin app custom?"';
 
-      // Tambah kreatif response
       if (lowerInput.includes('contoh') || lowerInput.includes('code')) {
         response += '\n\nContoh produk kami bisa anda temukan di page products, dan dokumentasinya ada di page gallery\n';
       }
 
       setMessages(prev => [...prev, { text: response, isBot: true }]);
       setIsTyping(false);
-    }, 1200); // delay lebih natural
+    }, 1200);
+  };
+
+  const handleQuickQuestion = (question: string) => {
+    handleSend(question);
   };
 
   return (
     <>
-      {/* Floating Button - Responsive position */}
+      {/* Floating Button */}
       <motion.button
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
@@ -80,7 +105,7 @@ export default function AiChatbot() {
         <Code2 className="h-6 w-6" />
       </motion.button>
 
-      {/* Chat Window - Responsive width */}
+      {/* Chat Window */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -158,25 +183,95 @@ export default function AiChatbot() {
                   </motion.div>
                 )}
               </AnimatePresence>
+              <div ref={messagesEndRef} /> {/* Anchor for scrolling */}
             </div>
 
-            {/* Input Area */}
-            <div className="flex items-center gap-3 border-t border-violet-500/20 bg-gradient-to-r from-violet-950/90 to-purple-950/90 px-4 py-4 sm:px-5">
-              <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                placeholder="Tanya tentang software dev..."
-                className="flex-1 rounded-full border border-violet-500/30 bg-violet-950/60 px-5 py-3 text-sm text-white placeholder-violet-300 focus:border-violet-400 focus:outline-none transition duration-200"
-              />
-              <button
-                onClick={handleSend}
-                disabled={!input.trim()}
-                className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-r from-violet-600 to-purple-600 text-white shadow-lg shadow-violet-500/30 hover:shadow-violet-500/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+            {/* Input Area with Expandable Suggestions */}
+            <div className="space-y-3 border-t border-violet-500/20 bg-gradient-to-r from-violet-950/90 to-purple-950/90 px-4 py-4 sm:px-5">
+              {/* Expandable Suggestions */}
+              <motion.div
+                initial={false}
+                animate={{ height: showSuggestions ? 'auto' : 0, opacity: showSuggestions ? 1 : 0 }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                className="overflow-hidden"
               >
-                <Send className="h-5 w-5" />
-              </button>
+                {showSuggestions && (
+                  <div className="space-y-2 pb-3">
+                    <motion.p 
+                      className="text-xs text-violet-400 font-medium"
+                      initial={{ opacity: 0, y: -5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                    >
+                      Pertanyaan populer:
+                    </motion.p>
+                    
+                    <div className="grid grid-cols-1 gap-2">
+                      {suggestedQuestions.map((suggestion, index) => (
+                        <motion.button
+                          key={suggestion.text}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.1 }}
+                          whileHover={{ scale: 1.02, x: 2 }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={() => {
+                            handleQuickQuestion(suggestion.text);
+                            setShowSuggestions(false); // Hide after click
+                          }}
+                          className="group w-full rounded-lg bg-white/5 px-4 py-3 text-left text-sm font-medium text-violet-200 backdrop-blur-sm border border-violet-500/20 hover:border-violet-400/50 hover:bg-white/10 transition-all duration-200 flex items-center justify-between"
+                        >
+                          <span>{suggestion.text}</span>
+                          <motion.div
+                            className="h-2 w-2 rounded-full bg-violet-400"
+                            whileHover={{ scale: 1.3 }}
+                            transition={{ type: 'spring', stiffness: 400 }}
+                          />
+                        </motion.button>
+                      ))}
+                    </div>
+                    
+                    <motion.button
+                      onClick={() => setShowSuggestions(false)}
+                      className="text-xs text-violet-400 hover:text-violet-300 mt-2 flex items-center gap-1 transition-colors"
+                    >
+                      <X className="h-3 w-3" />
+                      Sembunyikan saran
+                    </motion.button>
+                  </div>
+                )}
+              </motion.div>
+
+              {/* Toggle Button */}
+              {!showSuggestions && (
+                <motion.button
+                  onClick={() => setShowSuggestions(true)}
+                  className="mx-auto mb-2 flex items-center gap-2 rounded-full bg-white/5 px-3 py-1.5 text-xs text-violet-300 hover:bg-white/10 transition-all"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <ChevronDown className="h-3 w-3" />
+                  Lihat pertanyaan populer
+                </motion.button>
+              )}
+
+              {/* Input Area */}
+              <div className="flex items-center gap-3 pt-2">
+                <input
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                  placeholder="Tanya tentang software dev..."
+                  className="flex-1 rounded-full border border-violet-500/30 bg-violet-950/60 px-5 py-3 text-sm text-white placeholder-violet-300 focus:border-violet-400 focus:outline-none transition duration-200"
+                />
+                <button
+                  onClick={() => handleSend()}
+                  disabled={!input.trim()}
+                  className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-r from-violet-600 to-purple-600 text-white shadow-lg shadow-violet-500/30 hover:shadow-violet-500/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Send className="h-5 w-5" />
+                </button>
+              </div>
             </div>
           </motion.div>
         )}

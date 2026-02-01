@@ -85,4 +85,8 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
     Route::delete('contacts/{contactMessage}', [ContactMessageController::class, 'destroy'])->name('contacts.destroy');
 });
 
+Route::fallback(function () {
+    return Inertia::render('errors/404')->toResponse(request())->setStatusCode(404);
+});
+
 require __DIR__ . '/settings.php';

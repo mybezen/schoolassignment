@@ -52,13 +52,16 @@ class ProductController extends Controller
     {
         $data = $request->validated();
 
+        // HANYA proses gambar jika benar-benar ada file baru yang diupload
         if ($request->hasFile('image')) {
-            // Delete old image
+            // Hapus gambar lama jika ada
             if ($product->image) {
                 Storage::disk('public')->delete($product->image);
             }
+            // Simpan gambar baru
             $data['image'] = $request->file('image')->store('products', 'public');
         }
+        // Jika tidak ada file baru → $data['image'] tidak di-set → kolom image tetap seperti semula
 
         $product->update($data);
 

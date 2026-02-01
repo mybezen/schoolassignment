@@ -63,19 +63,22 @@ class EventController extends Controller
     {
         $data = $request->validated();
 
+        // HANYA proses image jika benar-benar ada file baru
         if ($request->hasFile('image')) {
+            // Hapus image lama jika ada
             if ($event->image) {
                 Storage::disk('public')->delete($event->image);
             }
+            // Simpan image baru
             $data['image'] = $request->file('image')->store('events', 'public');
         }
+        // Jika tidak ada file baru → kolom image tidak diubah
 
         $event->update($data);
 
         return redirect()->route('admin.events.index')
             ->with('success', 'Event updated successfully.');
     }
-
     public function destroy(Event $event): RedirectResponse
     {
         if ($event->image) {

@@ -2,9 +2,8 @@ import { Head, Link } from '@inertiajs/react';
 import PublicLayout from '@/layouts/public-layout';
 import { ArrowRight, Target, Users, Award, TrendingUp, Sparkles, Code2 } from 'lucide-react';
 import { format } from 'date-fns';
-import { motion, Variants, AnimatePresence } from 'motion/react';
+import { motion, Variants, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import VisionMission from './vission-mission';
 
 interface Product {
   id: number;
@@ -369,7 +368,7 @@ export default function Home({ featuredProducts, latestArticles, upcomingEvents,
 
             {/* History / Company Profile Section */}
             <section className="relative py-24 md:py-32">
-              {/* Subtle background accents yang match tema violet */}
+              {/* Subtle background accents */}
               <div className="absolute inset-0 -z-10 pointer-events-none">
                 <div className="absolute left-1/3 top-1/4 h-96 w-96 bg-violet-600/8 rounded-full blur-3xl" />
                 <div className="absolute right-1/4 bottom-1/3 h-80 w-80 bg-purple-600/8 rounded-full blur-3xl" />
@@ -384,62 +383,53 @@ export default function Home({ featuredProducts, latestArticles, upcomingEvents,
               >
                 {/* Header */}
                 <div className="text-center mb-12 md:mb-16">
-                  <motion.div
-                    variants={heroItemVariants}
-                    className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-2 text-sm font-medium text-zinc-400 backdrop-blur-xl"
-                  >
+                  <motion.div variants={heroItemVariants} className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-2 text-sm font-medium text-zinc-400 backdrop-blur-xl">
                     <Sparkles className="h-4 w-4 text-violet-400" />
                     Our Journey
                   </motion.div>
 
-                  <motion.h2
-                    variants={heroItemVariants}
-                    className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-4"
-                  >
-                    Sejarah ByteCraft
+                  <motion.h2 variants={heroItemVariants} className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-4">
+                    ByteCraft History
                   </motion.h2>
 
-                  <motion.p
-                    variants={heroItemVariants}
-                    className="text-lg text-zinc-400 max-w-2xl mx-auto"
-                  >
-                    Dari startup kecil hingga mitra teknologi terpercaya
+                  <motion.p variants={heroItemVariants} className="text-lg text-zinc-400 max-w-2xl mx-auto">
+                    From a small startup to a trusted technology partner
                   </motion.p>
                 </div>
 
                 {/* Timeline */}
                 <div className="relative">
-                  {/* Garis vertikal tengah (hanya di desktop) */}
+                  {/* Vertical line (desktop only) */}
                   <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-violet-500/30 to-transparent hidden md:block" />
 
                   <div className="space-y-16 md:space-y-24">
                     {[
                       {
                         year: "2018",
-                        title: "Awal Mula",
+                        title: "The Beginning",
                         description:
-                          "ByteCraft lahir dari semangat sekelompok developer muda yang ingin membuat solusi teknologi sederhana tapi berdampak besar untuk bisnis lokal.",
+                          "ByteCraft was born from the passion of a group of young developers who wanted to create simple yet impactful technology solutions for local businesses.",
                         side: "left",
                       },
                       {
                         year: "2020",
-                        title: "Transformasi Digital",
+                        title: "Digital Transformation",
                         description:
-                          "Pandemi menjadi katalisator. Kami membantu puluhan UMKM dan bisnis beradaptasi dengan website, sistem manajemen, dan tools digital yang cepat & handal.",
+                          "The pandemic became a catalyst. We helped dozens of SMEs and businesses adapt with fast and reliable websites, management systems, and digital tools.",
                         side: "right",
                       },
                       {
                         year: "2022",
-                        title: "Ekspansi & Spesialisasi",
+                        title: "Expansion & Specialization",
                         description:
-                          "Tim bertumbuh signifikan. Mulai fokus pada layanan premium: web & mobile app, UI/UX modern, cloud solution, dan integrasi teknologi terkini.",
+                          "The team grew significantly. We began focusing on premium services: web & mobile apps, modern UI/UX, cloud solutions, and integration of cutting-edge technologies.",
                         side: "left",
                       },
                       {
-                        year: "2024 – Sekarang",
-                        title: "Inovasi Berkelanjutan",
+                        year: "2024 – Present",
+                        title: "Continuous Innovation",
                         description:
-                          "Kini ByteCraft terus berinovasi dengan Next.js, Laravel, TypeScript, AI tools, dan arsitektur scalable — siap mendukung bisnis menuju masa depan digital.",
+                          "Today, ByteCraft continues to innovate with Next.js, Laravel, TypeScript, AI tools, and scalable architecture — ready to support businesses toward a digital future.",
                         side: "right",
                       },
                     ].map((milestone, index) => (
@@ -454,7 +444,7 @@ export default function Home({ featuredProducts, latestArticles, upcomingEvents,
                           {milestone.year}
                         </div>
 
-                        {/* Card konten */}
+                        {/* Content card */}
                         <div className="flex-1 rounded-2xl border border-white/8 bg-white/[0.03] p-6 md:p-8 backdrop-blur-xl transition-all hover:border-violet-500/30 hover:bg-white/[0.05]">
                           <h3 className="mb-3 text-xl md:text-2xl font-semibold text-white">{milestone.title}</h3>
                           <p className="text-base text-zinc-300 leading-relaxed">
@@ -466,15 +456,15 @@ export default function Home({ featuredProducts, latestArticles, upcomingEvents,
                   </div>
                 </div>
 
-                {/* Penutup singkat */}
+                {/* Closing statement */}
                 <motion.div
                   variants={heroItemVariants}
                   className="mt-16 md:mt-20 text-center"
                 >
                   <p className="text-lg md:text-xl text-zinc-300">
-                    Hari ini, ByteCraft tetap berkomitmen: <br />
+                    Today, ByteCraft remains committed: <br />
                     <span className="font-medium text-violet-400">
-                      Membangun teknologi yang mudah digunakan, tapi punya dampak nyata.
+                      Building technology that's easy to use, yet delivers real impact.
                     </span>
                   </p>
                 </motion.div>
