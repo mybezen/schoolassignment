@@ -2,8 +2,32 @@ import { Head, Link } from '@inertiajs/react';
 import PublicLayout from '@/layouts/public-layout';
 import { ArrowRight, Target, Users, Award, TrendingUp, Sparkles, Code2 } from 'lucide-react';
 import { format } from 'date-fns';
-import { motion, Variants, AnimatePresence } from 'framer-motion';
+import { motion, Variants, AnimatePresence } from 'motion/react';
 import { useState, useEffect } from 'react';
+import {
+  DndContext,
+  useSensor,
+  useSensors,
+  PointerSensor,
+  DragEndEvent,
+  DragOverlay,
+  pointerWithin,
+  useDroppable,
+  DragOverEvent,
+  ClientRect,
+} from "@dnd-kit/core";
+import { CSS } from '@dnd-kit/utilities';
+import {
+  SortableContext,
+  horizontalListSortingStrategy,
+  useSortable,
+  arrayMove,
+} from "@dnd-kit/sortable";
+import {
+  snapCenterToCursor,
+  restrictToHorizontalAxis,
+} from "@dnd-kit/modifiers";
+
 
 interface Product {
   id: number;
@@ -34,9 +58,17 @@ interface Event {
 }
 
 interface Client {
-  id: number;
+  id: number | string;
   name: string;
   logo: string;
+  website?: string;
+}
+
+interface ClientMarqueeProps {
+  clients: Client[];
+  speed?: number;       // px per detik (default 50 → lambat-sedang)
+  pauseOnHover?: boolean;
+  className: string;
 }
 
 interface HomeProps {
@@ -147,7 +179,11 @@ function AboutSection() {
   ];
 
   return (
-    <section className="relative py-32">
+    <motion.section initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.3 }}
+      variants={sectionRevealVariants}
+      className="relative py-32">
       <div className="absolute inset-0 -z-10">
         <div className="absolute left-1/2 top-0 h-[1px] w-[600px] -translate-x-1/2 bg-gradient-to-r from-transparent via-violet-500/50 to-transparent" />
       </div>
@@ -156,24 +192,24 @@ function AboutSection() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
-        variants={heroContainerVariants}
+        variants={childVariants}
         className="space-y-24"
       >
         <div className="mx-auto max-w-3xl text-center">
-          <motion.div variants={heroItemVariants} className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-medium text-zinc-400 backdrop-blur-xl">
+          <motion.div variants={childVariants} className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-medium text-zinc-400 backdrop-blur-xl">
             <Sparkles className="h-3.5 w-3.5 text-violet-400" />
             About Us
           </motion.div>
-          <motion.h2 variants={heroItemVariants} className="mb-6 text-5xl font-bold tracking-tight text-white sm:text-6xl">
+          <motion.h2 variants={childVariants} className="mb-6 text-5xl font-bold tracking-tight text-white sm:text-6xl">
             Building the Future
           </motion.h2>
-          <motion.p variants={heroItemVariants} className="text-lg leading-relaxed text-zinc-400">
+          <motion.p variants={childVariants} className="text-lg leading-relaxed text-zinc-400">
             Founded with a vision to transform the industry, we've grown from a small startup to a leading provider of innovative solutions. We believe in the power of technology and human creativity to solve complex challenges.
           </motion.p>
         </div>
 
         <motion.div
-          variants={heroContainerVariants}
+          variants={childVariants}
           className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
         >
           {values.map((value, index) => {
@@ -181,7 +217,7 @@ function AboutSection() {
             return (
               <motion.div
                 key={value.title}
-                variants={heroItemVariants}
+                variants={childVariants}
                 className="group relative overflow-hidden rounded-2xl border border-white/5 bg-white/[0.02] p-8 backdrop-blur-xl transition-all hover:border-white/10 hover:bg-white/[0.04]"
               >
                 <div className="absolute inset-0 -z-10 bg-gradient-to-br from-violet-600/0 via-violet-600/5 to-purple-600/0 opacity-0 transition-opacity group-hover:opacity-100" />
@@ -228,9 +264,33 @@ function AboutSection() {
           </div>
         </motion.div>
       </motion.div>
-    </section>
+    </motion.section>
   );
 }
+
+const sectionRevealVariants: Variants = {
+  hidden: { opacity: 0, y: 80, filter: "blur(8px)" },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: 1.2,
+      ease: [0.25, 0.1, 0.25, 1],
+      staggerChildren: 0.15,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const childVariants: Variants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.9, ease: "easeOut" },
+  },
+};
 
 export default function Home({ featuredProducts, latestArticles, upcomingEvents, clients }: HomeProps) {
   const [showContent, setShowContent] = useState(false);
@@ -288,17 +348,22 @@ export default function Home({ featuredProducts, latestArticles, upcomingEvents,
             animate="enter"
             className="relative"
           >
-            <section className="relative min-h-[90vh] flex items-center justify-center pt-20">
+            {/* Hero Section */}
+            <motion.section
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.3 }}
+              variants={sectionRevealVariants}
+              className="relative min-h-[90vh] flex items-center justify-center pt-20"
+            >
               <div className="absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-violet-600/20 to-purple-600/20 blur-[128px]" />
 
               <motion.div
-                initial="hidden"
-                animate="visible"
-                variants={heroContainerVariants}
+                variants={childVariants}
                 className="relative mx-auto max-w-5xl text-center px-6"
               >
                 <motion.div
-                  variants={heroItemVariants}
+                  variants={childVariants}
                   className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-medium text-zinc-400 backdrop-blur-xl"
                 >
                   <span className="relative flex h-2 w-2">
@@ -309,7 +374,7 @@ export default function Home({ featuredProducts, latestArticles, upcomingEvents,
                 </motion.div>
 
                 <motion.h1
-                  variants={heroItemVariants}
+                  variants={childVariants}
                   className="mb-8 bg-gradient-to-br from-white via-white to-white/40 bg-clip-text text-7xl font-bold leading-[1.1] tracking-tight text-transparent sm:text-8xl"
                 >
                   Building Excellence
@@ -318,14 +383,14 @@ export default function Home({ featuredProducts, latestArticles, upcomingEvents,
                 </motion.h1>
 
                 <motion.p
-                  variants={heroItemVariants}
+                  variants={childVariants}
                   className="mx-auto mb-12 max-w-2xl text-xl leading-relaxed text-zinc-400"
                 >
                   We create innovative solutions that empower businesses to achieve their full potential through cutting-edge technology and exceptional design.
                 </motion.p>
 
                 <motion.div
-                  variants={heroItemVariants}
+                  variants={childVariants}
                   className="flex flex-wrap justify-center gap-4"
                 >
                   <Link
@@ -349,6 +414,7 @@ export default function Home({ featuredProducts, latestArticles, upcomingEvents,
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1.6, duration: 0.8 }}
+                variants={childVariants}
                 className="absolute -bottom-12 left-1/2 -translate-x-1/2"
               >
                 <div className="flex flex-col items-center gap-2">
@@ -362,7 +428,7 @@ export default function Home({ featuredProducts, latestArticles, upcomingEvents,
                   </motion.div>
                 </div>
               </motion.div>
-            </section>
+            </motion.section>
 
             <AboutSection />
 
@@ -709,7 +775,10 @@ export default function Home({ featuredProducts, latestArticles, upcomingEvents,
             )}
 
             {clients.length > 0 && (
-              <section className="py-32">
+              <section className="py-40 md:py-48 min-h-[60vh] flex flex-col justify-center relative overflow-hidden">
+                {/* Optional background accent */}
+                <div className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-violet-900/5 to-transparent pointer-events-none overflow-hidden" />
+
                 <motion.div
                   initial="hidden"
                   whileInView="visible"
@@ -717,35 +786,23 @@ export default function Home({ featuredProducts, latestArticles, upcomingEvents,
                   variants={heroContainerVariants}
                   className="text-center px-6"
                 >
-                  <motion.div variants={heroItemVariants} className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-medium text-zinc-400 backdrop-blur-xl">
+                  <motion.div variants={heroItemVariants} className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-2 text-sm font-medium text-zinc-400 backdrop-blur-xl">
                     Our Clients
                   </motion.div>
-                  <motion.h2 variants={heroItemVariants} className="mb-4 text-5xl font-bold tracking-tight text-white">
+                  <motion.h2 variants={heroItemVariants} className="mb-6 text-5xl md:text-6xl font-bold tracking-tight text-white">
                     Trusted By Leading Organizations
                   </motion.h2>
-                  <motion.p variants={heroItemVariants} className="mb-16 text-lg text-zinc-400">
+                  <motion.p variants={heroItemVariants} className="mb-16 text-lg md:text-xl text-zinc-400 max-w-3xl mx-auto">
                     Building lasting partnerships with industry leaders
                   </motion.p>
 
-                  <motion.div
-                    variants={heroContainerVariants}
-                    className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-6"
-                  >
-                    {clients.map((client) => (
-                      <motion.div
-                        key={client.id}
-                        variants={heroItemVariants}
-                        whileHover={{ scale: 1.05 }}
-                        className="flex items-center justify-center rounded-2xl border border-white/5 bg-white/[0.02] p-6 backdrop-blur-xl transition-all hover:border-white/10"
-                      >
-                        <img
-                          src={`/storage/${client.logo}`}
-                          alt={client.name}
-                          className="h-12 w-auto object-contain opacity-50 grayscale transition-all hover:opacity-100 hover:grayscale-0"
-                        />
-                      </motion.div>
-                    ))}
-                  </motion.div>
+                  {/* ClientMarquee dengan fix scroll & tinggi */}
+                  <ClientMarquee
+                    className="overflow-hidden"
+                    clients={clients}
+                    speed={45}
+                    pauseOnHover={true}
+                  />
                 </motion.div>
               </section>
             )}
@@ -753,5 +810,204 @@ export default function Home({ featuredProducts, latestArticles, upcomingEvents,
         )}
       </AnimatePresence>
     </PublicLayout>
+  );
+}
+
+const getInsertionPosition = (event: DragOverEvent, rect: ClientRect) => {
+  const activatorEvent = event.activatorEvent as PointerEvent | MouseEvent;
+  const cursorX = activatorEvent.clientX;
+  const itemCenterX = rect.left + rect.width / 2;
+  return cursorX < itemCenterX ? "before" : "after";
+};
+
+function SortableClientItem({ client, isOver, insertionPos }: {
+  client: Client;
+  isOver?: boolean;
+  insertionPos?: "before" | "after" | null;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: client.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition: transition || "transform 0.25s ease",
+    opacity: isDragging ? 0.7 : 1,
+    zIndex: isDragging ? 30 : "auto",
+    width: "fit-content",
+    minWidth: "120px", // minimal lebih besar biar tinggi terasa balance
+  };
+
+  return (
+    <>
+      {/* Drop bar SEBELUM item */}
+      {isOver && insertionPos === "before" && (
+        <div className="absolute left-[-24px] sm:left-[-32px] top-1/2 -translate-y-1/2 w-1.5 sm:w-2 h-28 sm:h-36 md:h-40 rounded-full bg-gradient-to-b from-violet-500 via-purple-500 to-fuchsia-500 opacity-90 animate-pulse scale-110 transition-all duration-200 shadow-lg shadow-violet-600/40 z-40 pointer-events-none" />
+      )}
+
+      <motion.a
+        ref={setNodeRef}
+        style={style}
+        href={client.website}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`group relative flex flex-col items-center justify-center touch-none select-none ${isOver ? "scale-[1.08] shadow-2xl shadow-violet-500/40 ring-2 ring-violet-400/50" : ""}`}
+        whileHover={{ scale: 1.08 }}
+        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        {...attributes}
+        {...listeners}
+      >
+        {/* Logo container lebih tinggi */}
+        <div className="relative rounded-2xl border border-white/5 bg-white/[0.02] p-5 sm:p-6 md:p-8 backdrop-blur-xl transition-all duration-300 group-hover:border-white/20 group-hover:shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+          <img
+            src={`/storage/${client.logo}`}
+            alt={client.name}
+            className="h-14 sm:h-16 md:h-18 lg:h-20 w-auto max-w-[160px] md:max-w-[180px] object-contain opacity-60 grayscale transition-all duration-400 group-hover:opacity-100 group-hover:grayscale-0"
+          />
+        </div>
+
+        {/* Nama client lebih bawah */}
+        <motion.div
+          className="absolute bottom-[-4rem] sm:bottom-[-4.5rem] md:bottom-[-5rem] left-1/2 -translate-x-1/2 pointer-events-none z-10"
+          initial={{ opacity: 0, y: 20, scale: 0.92 }}
+          whileHover={{
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            transition: { type: "spring", stiffness: 420, damping: 28 },
+          }}
+        >
+          <motion.span className="block rounded-lg bg-black/75 px-4 py-2 text-sm md:text-base font-medium text-white/95 backdrop-blur-lg border border-white/15 shadow-2xl whitespace-nowrap">
+            {client.name}
+          </motion.span>
+        </motion.div>
+      </motion.a>
+
+      {/* Drop bar SETELAH item */}
+      {isOver && insertionPos === "after" && (
+        <div className="absolute right-[-24px] sm:right-[-32px] top-1/2 -translate-y-1/2 w-1.5 sm:w-2 h-28 sm:h-36 md:h-40 rounded-full bg-gradient-to-b from-violet-500 via-purple-500 to-fuchsia-500 opacity-90 animate-pulse scale-110 transition-all duration-200 shadow-lg shadow-violet-600/40 z-40 pointer-events-none" />
+      )}
+    </>
+  );
+}
+
+function ClientMarquee({
+  clients: initialClients,
+  speed = 45,
+  pauseOnHover = true,
+}: ClientMarqueeProps) {
+  const [clients, setClients] = useState(initialClients);
+  const [activeId, setActiveId] = useState<number | string | null>(null);
+  const [overId, setOverId] = useState<number | string | null>(null);
+  const [insertionPos, setInsertionPos] = useState<"before" | "after" | null>(null);
+  const [isHovered, setIsHovered] = useState(false);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 10 } })
+  );
+
+  const handleDragOver = (event: DragOverEvent) => {
+    const { active, over } = event;
+
+    if (!over || active.id === over.id) {
+      setOverId(null);
+      setInsertionPos(null);
+      return;
+    }
+
+    setOverId(over.id as string | number);
+
+    const overRect = over.rect;
+    if (overRect) {
+      const activatorEvent = event.activatorEvent as PointerEvent | MouseEvent;
+      const cursorX = activatorEvent.clientX;
+      const centerX = overRect.left + overRect.width / 2;
+      setInsertionPos(cursorX < centerX ? "before" : "after");
+    }
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (active.id !== over?.id && over) {
+      setClients((items) => {
+        const oldIndex = items.findIndex((i) => i.id === active.id);
+        const newIndex = items.findIndex((i) => i.id === over.id);
+        const adjustedIndex = insertionPos === "before" ? newIndex : newIndex + 1;
+        return arrayMove(items, oldIndex, adjustedIndex);
+      });
+    }
+
+    setActiveId(null);
+    setOverId(null);
+    setInsertionPos(null);
+    setIsHovered(false);
+  };
+
+  // Hitung apakah perlu scrollable (opsional, biar di mobile tidak ada scroll kosong kalau item sedikit)
+  const needsScroll = clients.length > 4; // adjust angka ini sesuai jumlah item yang muat di viewport
+
+  return (
+    <div className="relative">
+      <DndContext
+        sensors={sensors}
+        collisionDetection={pointerWithin}
+        modifiers={[restrictToHorizontalAxis]}
+        onDragOver={handleDragOver}
+        onDragStart={(e) => {
+          setActiveId(e.active.id);
+          setIsHovered(true);
+        }}
+        onDragEnd={handleDragEnd}
+        onDragCancel={() => {
+          setActiveId(null);
+          setOverId(null);
+          setInsertionPos(null);
+          setIsHovered(false);
+        }}
+      >
+        <SortableContext
+          items={clients.map((c) => c.id)}
+          strategy={horizontalListSortingStrategy}
+        >
+          <div
+            className={`flex items-center gap-6 sm:gap-10 md:gap-14 lg:gap-20 whitespace-nowrap px-4 sm:px-8 md:px-12 lg:px-16 ${needsScroll ? "overflow-x-auto pb-10 md:pb-12 scrollbar-hide touch-pan-x snap-x snap-mandatory" : "justify-center"
+              }`}
+          >
+            {clients.map((client) => (
+              <SortableClientItem
+                key={client.id}
+                client={client}
+                isOver={overId === client.id}
+                insertionPos={overId === client.id ? insertionPos : null}
+              />
+            ))}
+          </div>
+        </SortableContext>
+
+        <DragOverlay
+          modifiers={[snapCenterToCursor]}
+          dropAnimation={{
+            duration: 500,
+            easing: "cubic-bezier(0.34, 1.56, 0.64, 1.35)",
+          }}
+        >
+          {activeId ? (
+            <div className="rounded-3xl border border-violet-400/50 bg-white/[0.06] p-6 md:p-8 backdrop-blur-xl shadow-2xl shadow-violet-700/50 ring-2 ring-violet-400/40">
+              <img
+                src={`/storage/${clients.find((c) => c.id === activeId)?.logo}`}
+                alt={clients.find((c) => c.id === activeId)?.name}
+                className="h-16 md:h-20 w-auto max-w-[180px] md:max-w-[220px] object-contain opacity-95"
+              />
+            </div>
+          ) : null}
+        </DragOverlay>
+      </DndContext>
+    </div>
   );
 }

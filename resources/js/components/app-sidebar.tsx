@@ -1,13 +1,13 @@
 import { Link, usePage } from '@inertiajs/react';
 import { 
-    BoxIcon, 
+    BoxIcon,
     Calendar1, 
-    CreditCard, 
     ImageIcon, 
     LayoutGrid, 
     Mail, 
     Paperclip, 
-    Users 
+    Users, 
+    WalletCards
 } from 'lucide-react';
 import { motion, AnimatePresence, Variants } from 'motion/react';
 import { useEffect, useRef } from 'react';
@@ -28,12 +28,12 @@ import { type NavItem } from '@/types';
 const mainNavItems: NavItem[] = [
     { title: 'Dashboard', href: '/admin/dashboard', icon: LayoutGrid },
     { title: 'Products', href: '/admin/products', icon: BoxIcon },
+    { title: 'Payments', href: '/admin/payments', icon: WalletCards },
     { title: 'Articles', href: '/admin/articles', icon: Paperclip },
     { title: 'Events', href: '/admin/events', icon: Calendar1 },
     { title: 'Gallery', href: '/admin/gallery', icon: ImageIcon },
     { title: 'Clients', href: '/admin/clients', icon: Users },
     { title: 'Contact Messages', href: '/admin/contacts', icon: Mail },
-    { title: 'Payments', href: '/admin/payments', icon: CreditCard },
 ];
 
 export function AppSidebar() {

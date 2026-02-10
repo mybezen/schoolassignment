@@ -1,13 +1,38 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Code2, X, Send, ChevronDown } from 'lucide-react';
+import { Code2, X, Send, ChevronDown, Globe } from 'lucide-react';
 
 interface Message {
   text: string;
   isBot: boolean;
 }
 
-const faqDatabase = [
+type Language = 'en' | 'id';
+
+const faqDatabaseEn = [
+  {
+    keywords: ['register', 'account', 'login', 'sign up', 'need account', 'consultation'],
+    answer: 'The login and register features are currently only for our Admin Panel. For customers, you don\'t need an account. Just contact us via the Contact page for your software development project consultation. We specialize in custom software like web apps, mobile apps, and AI solutions!'
+  },
+  {
+    keywords: ['order', 'buy', 'contact', 'project', 'how to order', 'development services'],
+    answer: 'To order products/development services, fill out the form on the Contact page. We\'ll reply via email or WhatsApp you provided to discuss project details, such as requirement gathering, tech stack (React, Node.js, etc.), timeline, and cost. Example: We can develop a custom CRM system in 4-8 weeks!'
+  },
+  {
+    keywords: ['demo', 'trial', 'example', 'free demo', 'free'],
+    answer: 'Yes, we provide free demos for most of our software products. Contact us via the Contact page to schedule a demo session. For example, our web app demo uses Framer Motion for smooth animations like this chatbot!'
+  },
+  {
+    keywords: ['time', 'process', 'duration', 'development time', 'how long', 'custom project'],
+    answer: 'The development time for custom software projects depends on complexity, averaging 4-12 weeks. We use agile methodology for faster iterations. Example: A simple web app can be completed in 4 weeks, a full enterprise system in 8-12 weeks. Let\'s discuss your project!'
+  },
+  {
+    keywords: ['services', 'development', 'software', 'available', 'what services'],
+    answer: 'As a software development company, we specialize in: Custom Web/Mobile Apps, AI/ML Integration, Cloud Solutions (AWS/Azure), and DevOps. Our tech stack: React, Next.js, Node.js, Python, and more. Ready to code your vision?'
+  }
+];
+
+const faqDatabaseId = [
   {
     keywords: ['register', 'akun', 'login', 'daftar', 'butuh akun', 'konsultasi'],
     answer: 'Fitur login dan register saat ini hanya untuk Admin Panel kami. Untuk pelanggan, Anda tidak perlu akun. Langsung hubungi kami via halaman Contact untuk konsultasi project software development Anda. Kami spesialis dalam custom software seperti web apps, mobile apps, dan AI solutions!'
@@ -30,8 +55,15 @@ const faqDatabase = [
   }
 ];
 
-// Suggested questions - diintegrasikan ke faqDatabase via keywords
-const suggestedQuestions = [
+const suggestedQuestionsEn = [
+  { text: 'What software development services are available?', category: 'services' },
+  { text: 'How long does a custom project take?', category: 'timeline' },
+  { text: 'Is there a free demo?', category: 'demo' },
+  { text: 'How to order development services?', category: 'order' },
+  { text: 'Do I need an account for consultation?', category: 'account' },
+];
+
+const suggestedQuestionsId = [
   { text: 'Layanan software development apa yang tersedia?', category: 'services' },
   { text: 'Berapa lama pengerjaan project custom?', category: 'timeline' },
   { text: 'Apakah ada demo gratis?', category: 'demo' },
@@ -41,6 +73,7 @@ const suggestedQuestions = [
 
 export default function AiChatbot() {
   const [isOpen, setIsOpen] = useState(false);
+  const [language, setLanguage] = useState<Language>('id'); // Default to Indonesian
   const [messages, setMessages] = useState<Message[]>([
     { 
       text: 'Halo! Saya ByteBot dari ByteCraft Software Development. Spesialis custom web apps, mobile, AI, dan solusi digital lainnya. Mau tanya apa hari ini? 😄\n\nPilih topik cepat atau ketik langsung:', 
@@ -53,6 +86,42 @@ export default function AiChatbot() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const getInitialMessage = (lang: Language) => {
+    return lang === 'en'
+      ? 'Hello! I\'m ByteBot from ByteCraft Software Development. Specializing in custom web apps, mobile, AI, and other digital solutions. What would you like to ask today? 😄\n\nChoose a quick topic or type directly:'
+      : 'Halo! Saya ByteBot dari ByteCraft Software Development. Spesialis custom web apps, mobile, AI, dan solusi digital lainnya. Mau tanya apa hari ini? 😄\n\nPilih topik cepat atau ketik langsung:';
+  };
+
+  const getFallbackResponse = (lang: Language, lowerInput: string) => {
+    let response = lang === 'en'
+      ? 'Sorry, I don\'t understand yet. Please explain in more detail! Or contact our team directly on the Contact page to discuss your software project. Example question: "How long to build a custom app?"'
+      : 'Maaf, saya belum paham maksudnya. Coba jelaskan lebih detail ya! Atau langsung hubungi tim kami di halaman Contact untuk diskusi project software Anda. Contoh pertanyaan: "Berapa lama bikin app custom?"';
+
+    if (lowerInput.includes('contoh') || lowerInput.includes('code') || lowerInput.includes('example')) {
+      response += lang === 'en'
+        ? '\n\nYou can find examples of our products on the products page, and documentation on the gallery page.'
+        : '\n\nContoh produk kami bisa anda temukan di page products, dan dokumentasinya ada di page gallery\n';
+    }
+
+    return response;
+  };
+
+  const getPlaceholder = (lang: Language) => {
+    return lang === 'en' ? 'Ask about software dev...' : 'Tanya tentang software dev...';
+  };
+
+  const getSuggestionsTitle = (lang: Language) => {
+    return lang === 'en' ? 'Popular questions:' : 'Pertanyaan populer:';
+  };
+
+  const getHideSuggestionsText = (lang: Language) => {
+    return lang === 'en' ? 'Hide suggestions' : 'Sembunyikan saran';
+  };
+
+  const getShowSuggestionsText = (lang: Language) => {
+    return lang === 'en' ? 'View popular questions' : 'Lihat pertanyaan populer';
+  };
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -61,6 +130,17 @@ export default function AiChatbot() {
     scrollToBottom();
   }, [messages, isTyping]);
 
+  useEffect(() => {
+    // Reset messages when language changes
+    setMessages([
+      { 
+        text: getInitialMessage(language), 
+        isBot: true 
+      }
+    ]);
+    setShowSuggestions(true);
+  }, [language]);
+
   const handleSend = (messageText?: string) => {
     const textToSend = messageText || input.trim();
     if (!textToSend) return;
@@ -68,19 +148,16 @@ export default function AiChatbot() {
     setMessages(prev => [...prev, { text: textToSend, isBot: false }]);
     setInput('');
     setIsTyping(true);
-    setShowSuggestions(false); // Auto hide suggestions setelah kirim
+    setShowSuggestions(false); // Auto hide suggestions after send
 
     setTimeout(() => {
       const lowerInput = textToSend.toLowerCase();
+      const faqDatabase = language === 'en' ? faqDatabaseEn : faqDatabaseId;
       const matched = faqDatabase.find(faq => faq.keywords.some(kw => lowerInput.includes(kw)));
       
-      let response = matched 
+      const response = matched 
         ? matched.answer 
-        : 'Maaf, saya belum paham maksudnya. Coba jelaskan lebih detail ya! Atau langsung hubungi tim kami di halaman Contact untuk diskusi project software Anda. Contoh pertanyaan: "Berapa lama bikin app custom?"';
-
-      if (lowerInput.includes('contoh') || lowerInput.includes('code')) {
-        response += '\n\nContoh produk kami bisa anda temukan di page products, dan dokumentasinya ada di page gallery\n';
-      }
+        : getFallbackResponse(language, lowerInput);
 
       setMessages(prev => [...prev, { text: response, isBot: true }]);
       setIsTyping(false);
@@ -90,6 +167,12 @@ export default function AiChatbot() {
   const handleQuickQuestion = (question: string) => {
     handleSend(question);
   };
+
+  const toggleLanguage = () => {
+    setLanguage(prev => prev === 'en' ? 'id' : 'en');
+  };
+
+  const suggestedQuestions = language === 'en' ? suggestedQuestionsEn : suggestedQuestionsId;
 
   return (
     <>
@@ -126,12 +209,21 @@ export default function AiChatbot() {
                   <p className="text-xs text-violet-300">ByteCraft Software Dev</p>
                 </div>
               </div>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="rounded-full p-2 text-zinc-400 hover:bg-white/5 hover:text-white transition"
-              >
-                <X className="h-5 w-5 sm:h-6 sm:w-6" />
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={toggleLanguage}
+                  className="rounded-full p-2 text-zinc-400 hover:bg-white/5 hover:text-white transition flex items-center gap-1"
+                >
+                  <Globe className="h-5 w-5" />
+                  <span className="text-sm">{language === 'en' ? 'EN' : 'ID'}</span>
+                </button>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="rounded-full p-2 text-zinc-400 hover:bg-white/5 hover:text-white transition"
+                >
+                  <X className="h-5 w-5 sm:h-6 sm:w-6" />
+                </button>
+              </div>
             </div>
 
             {/* Messages Area */}
@@ -202,7 +294,7 @@ export default function AiChatbot() {
                       initial={{ opacity: 0, y: -5 }}
                       animate={{ opacity: 1, y: 0 }}
                     >
-                      Pertanyaan populer:
+                      {getSuggestionsTitle(language)}
                     </motion.p>
                     
                     <div className="grid grid-cols-1 gap-2">
@@ -235,7 +327,7 @@ export default function AiChatbot() {
                       className="text-xs text-violet-400 hover:text-violet-300 mt-2 flex items-center gap-1 transition-colors"
                     >
                       <X className="h-3 w-3" />
-                      Sembunyikan saran
+                      {getHideSuggestionsText(language)}
                     </motion.button>
                   </div>
                 )}
@@ -250,7 +342,7 @@ export default function AiChatbot() {
                   whileTap={{ scale: 0.95 }}
                 >
                   <ChevronDown className="h-3 w-3" />
-                  Lihat pertanyaan populer
+                  {getShowSuggestionsText(language)}
                 </motion.button>
               )}
 
@@ -261,7 +353,7 @@ export default function AiChatbot() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                  placeholder="Tanya tentang software dev..."
+                  placeholder={getPlaceholder(language)}
                   className="flex-1 rounded-full border border-violet-500/30 bg-violet-950/60 px-5 py-3 text-sm text-white placeholder-violet-300 focus:border-violet-400 focus:outline-none transition duration-200"
                 />
                 <button

@@ -90,7 +90,7 @@ export default function PaymentCreate({ product }: PaymentCreateProps) {
     const paymentDestinations = {
         paypal: 'amriikhda207@gmail.com',
         visa: '4532 1234 5678 9010',
-        qris: '/images/kas.jpg',
+        qris: '/kas.jpg',
     };
 
     return (
