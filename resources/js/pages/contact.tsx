@@ -3,6 +3,7 @@ import PublicLayout from '@/layouts/public-layout';
 import { Mail, Phone, MapPin, CheckCircle, Clock, Send, X } from 'lucide-react';
 import { FormEventHandler, useState } from 'react';
 import { motion, AnimatePresence, Variants } from 'motion/react';
+import { usePage } from '@inertiajs/react';
 
 interface ContactProps { }
 
@@ -36,12 +37,18 @@ const dialogVariants: Variants = {
 };
 
 export default function Contact({ }: ContactProps) {
+    const page = usePage();
+    const url = page.url;
+    const queryParams = new URLSearchParams(url.split('?')[1] || '');
+    const initialSubject = queryParams.get('subject') || '';
+    const initialMessage = queryParams.get('message') || '';
+
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         email: '',
         phone: '',
-        subject: '',
-        message: '',
+        subject: initialSubject,
+        message: initialMessage,
     });
 
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
@@ -148,7 +155,7 @@ export default function Contact({ }: ContactProps) {
                                                 value={data.phone}
                                                 onChange={(e) => setData('phone', e.target.value)}
                                                 className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-zinc-500 backdrop-blur-xl transition focus:border-violet-500/50 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-violet-500/20"
-                                                placeholder="+62 123 4567 890"
+                                                placeholder="621234567890"
                                             />
                                             {errors.phone && <p className="text-xs text-red-400">{errors.phone}</p>}
                                         </div>

@@ -1,5 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Home, ArrowLeft, Search } from 'lucide-react';
 
 export default function NotFound() {
@@ -36,7 +36,7 @@ export default function NotFound() {
             transition={{ delay: 0.5, duration: 0.6 }}
             className="text-lg sm:text-xl text-zinc-400 mb-10 max-w-xl mx-auto"
           >
-            Maaf, halaman yang kamu cari sepertinya tidak ada atau telah dipindahkan. 
+            Maaf, halaman yang kamu cari sepertinya tidak ada atau telah dipindahkan.
             Mungkin ada kesalahan ketik di URL atau halaman sudah dihapus.
           </motion.p>
 

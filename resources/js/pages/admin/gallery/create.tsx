@@ -1,6 +1,6 @@
 import { Head, useForm } from '@inertiajs/react';
 import { FormEventHandler, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { CheckCircle2, ImageIcon, Tag, Hash } from 'lucide-react';
 
 import AppLayout from '@/layouts/app-layout';
@@ -127,11 +127,10 @@ export default function GalleryCreate() {
                       onFocus={() => setFocusedField('title')}
                       onBlur={() => setFocusedField(null)}
                       placeholder="Optional image title"
-                      className={`transition-all duration-200 ${
-                        focusedField === 'title'
+                      className={`transition-all duration-200 ${focusedField === 'title'
                           ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
                           : ''
-                      }`}
+                        }`}
                     />
                     <AnimatePresence>
                       {errors.title && (
@@ -171,11 +170,10 @@ export default function GalleryCreate() {
                       onFocus={() => setFocusedField('image')}
                       onBlur={() => setFocusedField(null)}
                       required
-                      className={`transition-all duration-200 cursor-pointer ${
-                        focusedField === 'image'
+                      className={`transition-all duration-200 cursor-pointer ${focusedField === 'image'
                           ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
                           : ''
-                      }`}
+                        }`}
                     />
                     <AnimatePresence>
                       {errors.image && (
@@ -209,11 +207,10 @@ export default function GalleryCreate() {
                       onBlur={() => setFocusedField(null)}
                       rows={3}
                       placeholder="Image description or caption"
-                      className={`transition-all duration-200 ${
-                        focusedField === 'caption'
+                      className={`transition-all duration-200 ${focusedField === 'caption'
                           ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
                           : ''
-                      }`}
+                        }`}
                     />
                     <AnimatePresence>
                       {errors.caption && (
@@ -249,11 +246,10 @@ export default function GalleryCreate() {
                       onValueChange={(value) => setData('category', value)}
                     >
                       <SelectTrigger
-                        className={`transition-all duration-200 ${
-                          focusedField === 'category'
+                        className={`transition-all duration-200 ${focusedField === 'category'
                             ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
                             : ''
-                        }`}
+                          }`}
                         onFocus={() => setFocusedField('category')}
                         onBlur={() => setFocusedField(null)}
                       >
@@ -316,11 +312,10 @@ export default function GalleryCreate() {
                       onChange={(e) => setData('order', parseInt(e.target.value) || 0)}
                       onFocus={() => setFocusedField('order')}
                       onBlur={() => setFocusedField(null)}
-                      className={`transition-all duration-200 ${
-                        focusedField === 'order'
+                      className={`transition-all duration-200 ${focusedField === 'order'
                           ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
                           : ''
-                      }`}
+                        }`}
                     />
                     <AnimatePresence>
                       {errors.order && (

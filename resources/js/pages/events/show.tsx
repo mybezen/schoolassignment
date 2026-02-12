@@ -47,6 +47,7 @@ const itemVariants: Variants = {
 
 export default function EventShow({ event, relatedEvents }: EventShowProps) {
     const isEventPast = isPast(new Date(event.start_date));
+    const formattedStartDate = format(new Date(event.start_date), 'MMMM dd, yyyy');
 
     return (
         <PublicLayout>
@@ -84,11 +85,10 @@ export default function EventShow({ event, relatedEvents }: EventShowProps) {
                                     alt={event.title}
                                     className={`w-full object-cover ${isEventPast ? 'grayscale' : ''}`}
                                 />
-                                <div className={`absolute right-4 top-4 rounded-lg border px-4 py-2 text-sm font-medium backdrop-blur-xl ${
-                                    isEventPast
+                                <div className={`absolute right-4 top-4 rounded-lg border px-4 py-2 text-sm font-medium backdrop-blur-xl ${isEventPast
                                         ? 'border-white/20 bg-white/10 text-zinc-300'
                                         : 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300'
-                                }`}>
+                                    }`}>
                                     {isEventPast ? 'Past Event' : 'Upcoming'}
                                 </div>
                             </motion.div>
@@ -192,7 +192,7 @@ export default function EventShow({ event, relatedEvents }: EventShowProps) {
 
                             {!isEventPast && (
                                 <Link
-                                    href="/contact"
+                                    href={`/contact?subject=Interest in ${event.title}&message=I am interested in the event "${event.title}" scheduled for ${formattedStartDate}. Please provide more details.`}
                                     className="group flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 px-6 py-4 text-base font-semibold text-white shadow-lg shadow-violet-500/25 transition-all hover:shadow-xl hover:shadow-violet-500/40"
                                 >
                                     Register Interest

@@ -1,6 +1,6 @@
 import { Head, useForm } from '@inertiajs/react';
 import { FormEventHandler, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion'; // ← perbaiki import (bukan 'motion/react')
+import { motion, AnimatePresence } from 'motion/react'; // ← perbaiki import (bukan 'motion/react')
 import { CheckCircle2, FileText, Image as ImageIcon, User, Calendar, X } from 'lucide-react';
 
 import AppLayout from '@/layouts/app-layout';

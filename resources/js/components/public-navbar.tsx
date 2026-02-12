@@ -1,7 +1,7 @@
 import { Link, usePage } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
 import { Menu, X, Code2 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion'; // ← perbaiki import motion/react → framer-motion
+import { motion, AnimatePresence } from 'motion/react'; // ← perbaiki import motion/react → motion/react
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,11 +31,10 @@ export default function Navbar() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ type: 'spring', damping: 20, stiffness: 150 }}
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-        scrolled
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${scrolled
           ? 'bg-black/70 backdrop-blur-xl border-b border-white/5 shadow-xl shadow-black/40'
           : 'bg-transparent'
-      }`}
+        }`}
     >
       <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
         <div className="flex h-16 items-center justify-between">
@@ -67,9 +66,8 @@ export default function Navbar() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`group relative px-4 py-2.5 text-sm font-medium transition-all duration-300 ${
-                    isActive ? 'text-white' : 'text-zinc-300 hover:text-white'
-                  } hover:scale-105 active:scale-95`}
+                  className={`group relative px-4 py-2.5 text-sm font-medium transition-all duration-300 ${isActive ? 'text-white' : 'text-zinc-300 hover:text-white'
+                    } hover:scale-105 active:scale-95`}
                 >
                   {item.name}
 
@@ -131,11 +129,10 @@ export default function Navbar() {
                   >
                     <Link
                       href={item.href}
-                      className={`group flex items-center rounded-lg px-5 py-3.5 text-base font-medium transition-all ${
-                        isActive
+                      className={`group flex items-center rounded-lg px-5 py-3.5 text-base font-medium transition-all ${isActive
                           ? 'bg-violet-500/15 text-white border-l-4 border-violet-500'
                           : 'text-zinc-300 hover:bg-white/5 hover:text-white hover:pl-6'
-                      }`}
+                        }`}
                       onClick={() => setIsOpen(false)}
                     >
                       {item.name}

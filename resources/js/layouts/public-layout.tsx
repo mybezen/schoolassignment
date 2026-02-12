@@ -1,7 +1,7 @@
 import { PropsWithChildren, useEffect, useState } from 'react';
 import Navbar from '@/components/public-navbar';
 import { Link } from '@inertiajs/react';
-import { motion, AnimatePresence, Variants } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'motion/react';
 import { router } from '@inertiajs/react';
 import AiChatbot from '@/components/ai-chatbot';
 import { MessageSquare, Package, Newspaper, Info, ArrowRight } from 'lucide-react';
@@ -22,28 +22,28 @@ export default function PublicLayout({ children }: PropsWithChildren) {
   }, []);
 
   // Variants untuk section footer
-  const footerSectionVariants : Variants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: { 
-      duration: 0.7, 
-      ease: [0.4, 0, 0.2, 1] // Using cubic-bezier values
+  const footerSectionVariants: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.7,
+        ease: [0.4, 0, 0.2, 1] // Using cubic-bezier values
+      }
     }
-  }
-};
+  };
 
   // Variants untuk quick action cards (big buttons)
-  const quickActionVariants : Variants = {
-    rest: { 
-      scale: 1, 
+  const quickActionVariants: Variants = {
+    rest: {
+      scale: 1,
       y: 0,
       boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.3)",
       transition: { duration: 0.3 }
     },
-    hover: { 
-      scale: 1.05, 
+    hover: {
+      scale: 1.05,
       y: -8,
       boxShadow: "0 20px 40px -10px rgba(139, 92, 246, 0.4)",
       transition: { duration: 0.3 }
@@ -52,13 +52,13 @@ export default function PublicLayout({ children }: PropsWithChildren) {
   };
 
   // Variants untuk icon di quick action
-  const iconVariants : Variants = {
+  const iconVariants: Variants = {
     rest: { rotate: 0, scale: 1 },
     hover: { rotate: 12, scale: 1.15 }
   };
 
   // Variants khusus untuk Quick Links list item
-  const quickLinkVariants : Variants = {
+  const quickLinkVariants: Variants = {
     rest: { x: 0 },
     hover: { x: 4 }
   };
@@ -115,7 +115,7 @@ export default function PublicLayout({ children }: PropsWithChildren) {
                       href={link.href}
                       className="group inline-flex items-center text-sm text-zinc-400 transition-colors hover:text-white"
                     >
-                      <motion.span 
+                      <motion.span
                         className="mr-2 h-px bg-violet-500 transition-all"
                         variants={quickLinkVariants}
                       />

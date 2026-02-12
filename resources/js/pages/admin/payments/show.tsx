@@ -293,7 +293,7 @@ export default function PaymentShow({ payment }: PaymentShowProps) {
                                     <img 
                                         src={`/storage/${payment.payment_proof}`}
                                         alt="Payment Proof"
-                                        className="w-full h-auto"
+                                        className="w-full max-h-[500px] h-auto object-contain"
                                     />
                                 </div>
                             </CardContent>

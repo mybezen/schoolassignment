@@ -1,6 +1,6 @@
 import { Head, useForm } from '@inertiajs/react';
 import { FormEventHandler, useState } from 'react';
-import { motion, AnimatePresence, Variants } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'motion/react';
 import { CheckCircle2, XCircle, Package, Image as ImageIcon, Loader2, X } from 'lucide-react';
 
 import AppLayout from '@/layouts/app-layout';
@@ -94,19 +94,19 @@ export default function ProductsEdit({ product }: ProductsEditProps) {
         });
     };
 
-   const getFieldValue = (field: keyof typeof data): string | number => {
-    const val = data[field];
-    if (val === null || val === undefined) {
-        return field === 'order' ? 0 : '';
-    }
-    if (field === 'price' && typeof val === 'string') {
-        return val; // Return as string to preserve decimal places
-    }
-    if (field === 'order' && typeof val === 'number') {
-        return val;
-    }
-    return String(val);
-};
+    const getFieldValue = (field: keyof typeof data): string | number => {
+        const val = data[field];
+        if (val === null || val === undefined) {
+            return field === 'order' ? 0 : '';
+        }
+        if (field === 'price' && typeof val === 'string') {
+            return val; // Return as string to preserve decimal places
+        }
+        if (field === 'order' && typeof val === 'number') {
+            return val;
+        }
+        return String(val);
+    };
 
     const isFieldFilled = (field: keyof typeof data) => {
         const val = data[field];

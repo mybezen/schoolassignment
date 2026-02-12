@@ -36,7 +36,7 @@ class GallerySeeder extends Seeder
             ],
             [
                 'title' => null,
-                'image' => 'galleries/random-shot.jpg',
+                'image' => 'galleries/seed4.jpg',
                 'caption' => null,
                 'category' => null,
                 'order' => 4,

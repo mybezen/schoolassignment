@@ -1,7 +1,8 @@
 import { Head, useForm } from '@inertiajs/react';
 import { FormEventHandler, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { CheckCircle2, Calendar, MapPin, Image as ImageIcon, Clock } from 'lucide-react';
+import { CheckCircle2, Calendar, MapPin, Image as ImageIcon, Clock, Check, ChevronsUpDown } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
@@ -11,6 +12,30 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DatePicker } from '@/components/ui/date-picker';
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from '@/components/ui/popover';
+import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+    CommandList,
+} from '@/components/ui/command';
+import { indonesianLocations } from '@/lib/indonesianLocations';
+
+interface Product {
+    id: number;
+    name: string;
+    description: string | null;
+    price: string | null;
+    is_active: boolean;
+    image: string | null;
+    created_at: string;
+}
 
 export default function EventsCreate() {
     const { data, setData, post, processing, errors } = useForm({
@@ -26,6 +51,7 @@ export default function EventsCreate() {
 
     const [showSuccess, setShowSuccess] = useState(false);
     const [focusedField, setFocusedField] = useState<string | null>(null);
+    const [open, setOpen] = useState(false);
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
@@ -136,8 +162,8 @@ export default function EventsCreate() {
                                                 onBlur={() => setFocusedField(null)}
                                                 required
                                                 className={`transition-all duration-200 ${focusedField === 'title'
-                                                        ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
-                                                        : ''
+                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
+                                                    : ''
                                                     }`}
                                                 placeholder="Enter event title"
                                             />
@@ -172,8 +198,8 @@ export default function EventsCreate() {
                                             rows={2}
                                             placeholder="Brief event summary"
                                             className={`transition-all duration-200 ${focusedField === 'description'
-                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
-                                                    : ''
+                                                ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
+                                                : ''
                                                 }`}
                                         />
                                         <AnimatePresence>
@@ -206,8 +232,8 @@ export default function EventsCreate() {
                                             rows={5}
                                             placeholder="Detailed event information"
                                             className={`transition-all duration-200 ${focusedField === 'content'
-                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
-                                                    : ''
+                                                ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
+                                                : ''
                                                 }`}
                                         />
                                         <AnimatePresence>
@@ -230,22 +256,53 @@ export default function EventsCreate() {
                                         animate={{ opacity: 1, x: 0 }}
                                         transition={{ delay: 0.35 }}
                                     >
-                                        <Label htmlFor="location" className="flex items-center gap-2">
+                                        <Label className="flex items-center gap-2">
                                             <MapPin className="h-4 w-4" />
                                             Location
                                         </Label>
-                                        <Input
-                                            id="location"
-                                            value={data.location}
-                                            onChange={(e) => setData('location', e.target.value)}
-                                            onFocus={() => setFocusedField('location')}
-                                            onBlur={() => setFocusedField(null)}
-                                            placeholder="Event venue or address"
-                                            className={`transition-all duration-200 ${focusedField === 'location'
-                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
-                                                    : ''
-                                                }`}
-                                        />
+                                        <Popover open={open} onOpenChange={setOpen}>
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                    variant="outline"
+                                                    role="combobox"
+                                                    aria-expanded={open}
+                                                    className="w-full justify-between"
+                                                >
+                                                    {data.location
+                                                        ? indonesianLocations.find((loc) => loc.value === data.location)?.label
+                                                        : "Select location..."}
+                                                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-full p-0">
+                                                <Command>
+                                                    <CommandInput placeholder="Search location..." />
+                                                    <CommandList>
+                                                        <CommandEmpty>No location found.</CommandEmpty>
+                                                        <CommandGroup>
+                                                            {indonesianLocations.map((loc) => (
+                                                                <CommandItem
+                                                                    key={loc.value}
+                                                                    value={loc.value}
+                                                                    onSelect={(currentValue) => {
+                                                                        setData('location', currentValue === data.location ? '' : currentValue);
+                                                                        setOpen(false);
+                                                                    }}
+                                                                >
+                                                                    <Check
+                                                                        className={cn(
+                                                                            "mr-2 h-4 w-4",
+                                                                            data.location === loc.value ? "opacity-100" : "opacity-0"
+                                                                        )}
+                                                                    />
+                                                                    {loc.label}
+                                                                </CommandItem>
+                                                            ))}
+                                                        </CommandGroup>
+                                                    </CommandList>
+                                                </Command>
+                                            </PopoverContent>
+                                        </Popover>
                                         <AnimatePresence>
                                             {errors.location && (
                                                 <motion.p
@@ -280,8 +337,8 @@ export default function EventsCreate() {
                                             onFocus={() => setFocusedField('image')}
                                             onBlur={() => setFocusedField(null)}
                                             className={`transition-all duration-200 cursor-pointer ${focusedField === 'image'
-                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
-                                                    : ''
+                                                ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
+                                                : ''
                                                 }`}
                                         />
                                         <AnimatePresence>
@@ -347,8 +404,8 @@ export default function EventsCreate() {
                                                 onFocus={() => setFocusedField('end_date')}
                                                 onBlur={() => setFocusedField(null)}
                                                 className={`transition-all duration-200 w-full ${focusedField === 'end_date'
-                                                        ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
-                                                        : ''
+                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
+                                                    : ''
                                                     }`}
                                             />
                                             <AnimatePresence>

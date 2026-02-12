@@ -1,7 +1,8 @@
 import { Head, useForm } from '@inertiajs/react';
 import { FormEventHandler, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion'; // perbaiki import (bukan 'motion/react')
-import { CheckCircle2, Calendar, MapPin, Image as ImageIcon, Clock, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { CheckCircle2, Calendar, MapPin, Image as ImageIcon, Clock, X, Check, ChevronsUpDown } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
@@ -11,7 +12,20 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DatePicker } from '@/components/ui/date-picker';
-
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from '@/components/ui/popover';
+import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+    CommandList,
+} from '@/components/ui/command';
+import { indonesianLocations } from '@/lib/indonesianLocations';
 interface Event {
     id: number;
     title: string;
@@ -56,6 +70,7 @@ export default function EventsEdit({ event }: EventsEditProps) {
     const [previewImage, setPreviewImage] = useState<string | null>(null);
     const [showSuccess, setShowSuccess] = useState(false);
     const [focusedField, setFocusedField] = useState<string | null>(null);
+    const [open, setOpen] = useState(false);
 
     const startDate = data.start_date ? new Date(data.start_date) : undefined;
     const endDate = data.end_date ? new Date(data.end_date) : undefined;
@@ -226,16 +241,53 @@ export default function EventsEdit({ event }: EventsEditProps) {
 
                                     {/* Location */}
                                     <motion.div className="space-y-2" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.35 }}>
-                                        <Label htmlFor="location" className="flex items-center gap-2">
-                                            <MapPin className="h-4 w-4" /> Location
+                                        <Label className="flex items-center gap-2">
+                                            <MapPin className="h-4 w-4" />
+                                            Location
                                         </Label>
-                                        <Input
-                                            id="location"
-                                            value={data.location}
-                                            onChange={(e) => setData('location', e.target.value)}
-                                            placeholder="Event venue"
-                                            className={`transition-all duration-200 ${focusedField === 'location' ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' : ''}`}
-                                        />
+                                        <Popover open={open} onOpenChange={setOpen}>
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                    variant="outline"
+                                                    role="combobox"
+                                                    aria-expanded={open}
+                                                    className="w-full justify-between"
+                                                >
+                                                    {data.location
+                                                        ? indonesianLocations.find((loc) => loc.value === data.location)?.label
+                                                        : "Select location..."}
+                                                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-full p-0">
+                                                <Command>
+                                                    <CommandInput placeholder="Search location..." />
+                                                    <CommandList>
+                                                        <CommandEmpty>No location found.</CommandEmpty>
+                                                        <CommandGroup>
+                                                            {indonesianLocations.map((loc) => (
+                                                                <CommandItem
+                                                                    key={loc.value}
+                                                                    value={loc.value}
+                                                                    onSelect={(currentValue) => {
+                                                                        setData('location', currentValue === data.location ? '' : currentValue);
+                                                                        setOpen(false);
+                                                                    }}
+                                                                >
+                                                                    <Check
+                                                                        className={cn(
+                                                                            "mr-2 h-4 w-4",
+                                                                            data.location === loc.value ? "opacity-100" : "opacity-0"
+                                                                        )}
+                                                                    />
+                                                                    {loc.label}
+                                                                </CommandItem>
+                                                            ))}
+                                                        </CommandGroup>
+                                                    </CommandList>
+                                                </Command>
+                                            </PopoverContent>
+                                        </Popover>
                                         <AnimatePresence>
                                             {errors.location && (
                                                 <motion.p initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="text-sm text-destructive">

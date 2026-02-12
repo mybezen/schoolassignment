@@ -1,6 +1,6 @@
 import { Head, useForm } from '@inertiajs/react';
 import { FormEventHandler, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion'; // perbaiki import
+import { motion, AnimatePresence } from 'motion/react'; // perbaiki import
 import { CheckCircle2, Users, Globe, Image as ImageIcon, X } from 'lucide-react';
 
 import AppLayout from '@/layouts/app-layout';
@@ -79,7 +79,7 @@ export default function ClientsEdit({ client }: ClientsEditProps) {
         <AppLayout>
             <Head title="Edit Client" />
 
-            <motion.div 
+            <motion.div
                 className="flex h-full flex-1 justify-center p-6 overflow-x-auto"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -133,7 +133,7 @@ export default function ClientsEdit({ client }: ClientsEditProps) {
                             <CardContent className="pt-6">
                                 <form onSubmit={submit} className="space-y-6">
                                     {/* Name */}
-                                    <motion.div 
+                                    <motion.div
                                         className="space-y-2"
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
@@ -149,11 +149,10 @@ export default function ClientsEdit({ client }: ClientsEditProps) {
                                             onFocus={() => setFocusedField('name')}
                                             onBlur={() => setFocusedField(null)}
                                             required
-                                            className={`transition-all duration-200 ${
-                                                focusedField === 'name' 
-                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' 
+                                            className={`transition-all duration-200 ${focusedField === 'name'
+                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
                                                     : ''
-                                            }`}
+                                                }`}
                                         />
                                         <AnimatePresence>
                                             {errors.name && (
@@ -170,7 +169,7 @@ export default function ClientsEdit({ client }: ClientsEditProps) {
                                     </motion.div>
 
                                     {/* Logo - Bagian yang diperbaiki */}
-                                    <motion.div 
+                                    <motion.div
                                         className="space-y-2"
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
@@ -208,11 +207,10 @@ export default function ClientsEdit({ client }: ClientsEditProps) {
                                             onChange={handleLogoChange}
                                             onFocus={() => setFocusedField('logo')}
                                             onBlur={() => setFocusedField(null)}
-                                            className={`transition-all duration-200 cursor-pointer ${
-                                                focusedField === 'logo' 
-                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' 
+                                            className={`transition-all duration-200 cursor-pointer ${focusedField === 'logo'
+                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
                                                     : ''
-                                            }`}
+                                                }`}
                                         />
 
                                         {previewLogo && (
@@ -236,7 +234,7 @@ export default function ClientsEdit({ client }: ClientsEditProps) {
                                     </motion.div>
 
                                     {/* Website */}
-                                    <motion.div 
+                                    <motion.div
                                         className="space-y-2"
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
@@ -254,11 +252,10 @@ export default function ClientsEdit({ client }: ClientsEditProps) {
                                             onFocus={() => setFocusedField('website')}
                                             onBlur={() => setFocusedField(null)}
                                             placeholder="https://example.com"
-                                            className={`transition-all duration-200 ${
-                                                focusedField === 'website' 
-                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' 
+                                            className={`transition-all duration-200 ${focusedField === 'website'
+                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
                                                     : ''
-                                            }`}
+                                                }`}
                                         />
                                         <AnimatePresence>
                                             {errors.website && (
@@ -275,7 +272,7 @@ export default function ClientsEdit({ client }: ClientsEditProps) {
                                     </motion.div>
 
                                     {/* Description */}
-                                    <motion.div 
+                                    <motion.div
                                         className="space-y-2"
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
@@ -292,11 +289,10 @@ export default function ClientsEdit({ client }: ClientsEditProps) {
                                             onBlur={() => setFocusedField(null)}
                                             rows={3}
                                             placeholder="Brief description about the client"
-                                            className={`transition-all duration-200 ${
-                                                focusedField === 'description' 
-                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' 
+                                            className={`transition-all duration-200 ${focusedField === 'description'
+                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
                                                     : ''
-                                            }`}
+                                                }`}
                                         />
                                         <AnimatePresence>
                                             {errors.description && (
@@ -313,7 +309,7 @@ export default function ClientsEdit({ client }: ClientsEditProps) {
                                     </motion.div>
 
                                     {/* Order */}
-                                    <motion.div 
+                                    <motion.div
                                         className="space-y-2"
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
@@ -329,11 +325,10 @@ export default function ClientsEdit({ client }: ClientsEditProps) {
                                             onChange={(e) => setData('order', parseInt(e.target.value) || 0)}
                                             onFocus={() => setFocusedField('order')}
                                             onBlur={() => setFocusedField(null)}
-                                            className={`transition-all duration-200 ${
-                                                focusedField === 'order' 
-                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' 
+                                            className={`transition-all duration-200 ${focusedField === 'order'
+                                                    ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10'
                                                     : ''
-                                            }`}
+                                                }`}
                                         />
                                         <AnimatePresence>
                                             {errors.order && (
@@ -350,7 +345,7 @@ export default function ClientsEdit({ client }: ClientsEditProps) {
                                     </motion.div>
 
                                     {/* Active Switch */}
-                                    <motion.div 
+                                    <motion.div
                                         className="flex items-center space-x-3 p-4 rounded-lg bg-muted/30 border border-border/50"
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
@@ -368,14 +363,14 @@ export default function ClientsEdit({ client }: ClientsEditProps) {
                                     </motion.div>
 
                                     {/* Buttons */}
-                                    <motion.div 
+                                    <motion.div
                                         className="flex gap-3 pt-4"
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.55 }}
                                     >
-                                        <Button 
-                                            type="submit" 
+                                        <Button
+                                            type="submit"
                                             disabled={processing}
                                             className="flex-1 shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all duration-300"
                                         >

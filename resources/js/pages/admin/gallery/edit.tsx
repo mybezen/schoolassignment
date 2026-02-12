@@ -1,6 +1,6 @@
 import { Head, useForm } from '@inertiajs/react';
 import { FormEventHandler, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { CheckCircle2, Image as ImageIcon, Tag, Hash, X } from 'lucide-react';
 
 import AppLayout from '@/layouts/app-layout';
@@ -165,9 +165,8 @@ export default function GalleryEdit({ gallery }: GalleryEditProps) {
                       onFocus={() => setFocusedField('title')}
                       onBlur={() => setFocusedField(null)}
                       placeholder="Optional image title"
-                      className={`transition-all duration-200 ${
-                        focusedField === 'title' ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' : ''
-                      }`}
+                      className={`transition-all duration-200 ${focusedField === 'title' ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' : ''
+                        }`}
                     />
                     <AnimatePresence>
                       {errors.title && (
@@ -216,9 +215,8 @@ export default function GalleryEdit({ gallery }: GalleryEditProps) {
                       onChange={handleImageChange}
                       onFocus={() => setFocusedField('image')}
                       onBlur={() => setFocusedField(null)}
-                      className={`transition-all duration-200 cursor-pointer ${
-                        focusedField === 'image' ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' : ''
-                      }`}
+                      className={`transition-all duration-200 cursor-pointer ${focusedField === 'image' ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' : ''
+                        }`}
                     />
 
                     {previewImage && (
@@ -250,9 +248,8 @@ export default function GalleryEdit({ gallery }: GalleryEditProps) {
                       onBlur={() => setFocusedField(null)}
                       rows={3}
                       placeholder="Image description or caption"
-                      className={`transition-all duration-200 ${
-                        focusedField === 'caption' ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' : ''
-                      }`}
+                      className={`transition-all duration-200 ${focusedField === 'caption' ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' : ''
+                        }`}
                     />
                     <AnimatePresence>
                       {errors.caption && (
@@ -277,9 +274,8 @@ export default function GalleryEdit({ gallery }: GalleryEditProps) {
 
                     <Select value={data.category} onValueChange={(value) => setData('category', value)}>
                       <SelectTrigger
-                        className={`transition-all duration-200 ${
-                          focusedField === 'category' ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' : ''
-                        }`}
+                        className={`transition-all duration-200 ${focusedField === 'category' ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' : ''
+                          }`}
                         onFocus={() => setFocusedField('category')}
                         onBlur={() => setFocusedField(null)}
                       >
@@ -334,9 +330,8 @@ export default function GalleryEdit({ gallery }: GalleryEditProps) {
                       onChange={(e) => setData('order', parseInt(e.target.value) || 0)}
                       onFocus={() => setFocusedField('order')}
                       onBlur={() => setFocusedField(null)}
-                      className={`transition-all duration-200 ${
-                        focusedField === 'order' ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' : ''
-                      }`}
+                      className={`transition-all duration-200 ${focusedField === 'order' ? 'ring-2 ring-primary/50 border-primary/50 shadow-lg shadow-primary/10' : ''
+                        }`}
                     />
                     <AnimatePresence>
                       {errors.order && (
